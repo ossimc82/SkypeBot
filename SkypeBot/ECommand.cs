@@ -2,20 +2,34 @@ namespace SkypeBot
 {
     public enum ECommand
     {
-        GO_OFFLINE = "go offline",
-        HELLO = "hello",
-        HELP = "help",
-        DATE = "date",
-        TIME = "time",
-        WHO = "who",
-        WHO_AM_I = "who am i?",
-        PENIS = "penis",
-        YOUR_MOTHER = "your mother",
-        HI = "hi",
-        WAKE_HIM_UP = "wake him up!",
-        CONTATCS_AMOUNT = "contacts amount",
-        IGNORE_ME = "ignore me",
-        UNIGNORE_ME = "unignore me"
+        [StringValue("go offline")]
+        GO_OFFLINE,
+        [StringValue("hello")]
+        HELLO,
+        [StringValue("help")]
+        HELP,
+        [StringValue("date")]
+        DATE,
+        [StringValue("time")]
+        TIME,
+        [StringValue("who")]
+        WHO,
+        [StringValue("who am i?")]
+        WHO_AM_I,
+        [StringValue("penis")]
+        PENIS,
+        [StringValue("your mother")]
+        YOUR_MOTHER,
+        [StringValue("hi")]
+        HI,
+        [StringValue("wake him up!")]
+        WAKE_HIM_UP,
+        [StringValue("contacts amount")]
+        CONTACTS_AMOUNT,
+        [StringValue("ignore me")]
+        IGNORE_ME,
+        [StringValue("unignore me")]
+        UNIGNORE_ME,
     }
     
     public class StringValue : System.Attribute
