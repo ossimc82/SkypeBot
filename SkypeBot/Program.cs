@@ -6,11 +6,13 @@ using System.Threading.Tasks;
 using System.IO;
 using SKYPE4COMLib;
 using WMPLib;
+using System.Reflection;
 
 namespace SkypeBot
 {
     class Program
     {
+        static List<string> Commands = new List<string>();
         static Skype skype;
         static WindowsMediaPlayer mediaPlayer;
         static string[] ignoredUsers;
@@ -36,7 +38,6 @@ namespace SkypeBot
             skype.Attach();
             //Listen 
             skype.MessageStatus += new _ISkypeEvents_MessageStatusEventHandler(skype_MessageStatus);
-            skype.UserStatus += new _ISkypeEvents_UserStatusEventHandler(skype_UserStatus);
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("[" + DateTime.Now + "] Loading complete...");
             Console.Beep();
@@ -50,12 +51,6 @@ namespace SkypeBot
             };
 
             while (true) { Console.Read(); }
-        }
-
-        private static void skype_UserStatus(TUserStatus Status)
-        {
-            if (Status != TUserStatus.cusOffline || Status != TUserStatus.cusInvisible || Status != TUserStatus.cusSkypeMe || Status != TUserStatus.cusUnknown || Status != TUserStatus.cusNotAvailable)
-                curStatus = Status;
         }
 
         static void skype_MessageStatus(ChatMessage msg, TChatMessageStatus status)
@@ -118,86 +113,93 @@ namespace SkypeBot
 
         static string ProcessCommand(string str, ChatMessage message)
         {
-            string result;
+            string result = string.Empty;
+
             //Here are the the words that the bot understands.
-            switch (str.Remove(0, 1))
+            if (str == StringEnum.GetStringValue(ECommand.GO_OFFLINE))
             {
-                case StringEnum.GetStringValue(ECommand.GO_OFFLINE):
+                skype.ChangeUserStatus(TUserStatus.cusInvisible);
+                System.Threading.Thread.Sleep(5000);
+                skype.ChangeUserStatus(curStatus);
+                result = "Back :)";
+            }
+
+            else if (str == StringEnum.GetStringValue(ECommand.HELLO))
+            {
+                result = "Hello!";
+            }
+
+            else if (str == StringEnum.GetStringValue(ECommand.HELP))
+            {
+                foreach (var i in Enum.GetValues(typeof(ECommand)))
+                {
+                    string output = null;
+                    Type type = i.GetType();
+                    FieldInfo fi = type.GetField(i.ToString());
+                    StringValue[] attrs = fi.GetCustomAttributes(typeof(StringValue), false) as StringValue[];
+                    if (attrs.Length > 0)
                     {
-                        //you will go back online after 5 sec
-                        skype.ChangeUserStatus(TUserStatus.cusOffline);
-                        System.Threading.Thread.Sleep(5000);
-                        skype.ChangeUserStatus(curStatus);
-                        result = "Back :)";
-                    } break;
-                case StringEnum.GetStringValue(ECommand.HELLO):
-                    result = "Hello!";
-                    break;
-                case StringEnum.GetStringValue(ECommand.HELP):
-                    {
-                        foreach(var i in Enum.GetValues(typeof(ECommand)))
-                        {
-                            if(string.IsNullOrEmpty(result))
-                            {
-                                result = i + ',';
-                            }
-                            else
-                            {
-                                result = result + ' ' + i + ',';
-                            }
-                        }
+                        output = attrs[0].Value;
                     }
-                    break;
-                case StringEnum.GetStringValue(ECommand.DATE):
-                    result = "Current Date is: " + DateTime.Now.ToLongDateString();
-                    break;
-                case StringEnum.GetStringValue(ECommand.TIME):
-                    result = "Current Time is: " + DateTime.Now.ToLongTimeString();
-                    break;
-                case StringEnum.GetStringValue(ECommand.WHO):
-                    result = "You write with a skype bot, enjoy";
-                    break;
-                case StringEnum.GetStringValue(ECommand.WHO_AM_I):
-                    result = "you are " + message.Sender.Handle + " and your Fullname is " + message.Sender.FullName;
-                    break;
-                case StringEnum.GetStringValue(ECommand.PENIS):
-                    result = "vagina";
-                    break;
-                case StringEnum.GetStringValue(ECommand.YOUR_MOTHER):
-                    result = "your fish";
-                    break;
-                case StringEnum.GetStringValue(ECommand.HI):
-                    result = "hey :)";
-                    break;
-                case StringEnum.GetStringValue(ECommand.WAKE_HIM_UP):
-                    {
-                        mediaPlayer = new WindowsMediaPlayer();
-                        mediaPlayer.URL = "http://countersossi.co.funpic.de/rest/Linkin%20Park%20-Leave%20out%20all%20the%20rest%20-%20Lyrics.mp3";
-                        mediaPlayer.controls.play();
-                        result = "Let us wake up this asshole, I play music for him :)";
-                    } break;
-                case StringEnum.GetStringValue(ECommand.CONTACTS_AMOUNT):
-                    result = "You have " + message.Sender.NumberOfAuthBuddies + " contacts.";
-                    break;
-                case StringEnum.GetStringValue(ECommand.IGNORE_ME):
-                    {
-                        using (System.IO.StreamWriter writer = new System.IO.StreamWriter(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredUsers", true))
-                        {
-                            writer.Write(message.Sender.Handle + ",");
-                        }
-                        result = "You (" + message.Sender.Handle + ") dont get message from me now, you can get messages with \"!unignore\".";
-                    } break;
-                case StringEnum.GetStringValue(ECommand.UNIGNORE_ME):
-                    {
-                        string name = File.ReadAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredUsers");
-                        if (!name.Contains(message.Sender.Handle + ","))
-                            result = "Sorry but you (" + message.Sender.Handle + ") are not on my ignore list, with \"!ignore\" I'll not contact you again.";
-                        else
-                            result = "An error ocured while executing the command.";
-                    } break;
-                default:
-                    result = "Sorry, I do not recognize your command. Type \"!help\" to get a list of all commands. You can disable me with \"!ignore\"";
-                    break;
+                    result = result + output + ", ";
+                }
+            }
+
+            else if (str == StringEnum.GetStringValue(ECommand.DATE))
+                result = "Current Date is: " + DateTime.Now.ToLongDateString();
+
+            else if (str == StringEnum.GetStringValue(ECommand.TIME))
+                result = "Current Time is: " + DateTime.Now.ToLongTimeString();
+
+            else if (str == StringEnum.GetStringValue(ECommand.WHO))
+                result = "You write with a skype bot, enjoy";
+
+            else if (str == StringEnum.GetStringValue(ECommand.WHO_AM_I))
+                result = "you are " + message.Sender.Handle + " and your Fullname is " + message.Sender.FullName;
+
+            else if (str == StringEnum.GetStringValue(ECommand.PENIS))
+                result = "vagina";
+
+            else if (str == StringEnum.GetStringValue(ECommand.YOUR_MOTHER))
+                result = "your fish";
+
+            else if (str == StringEnum.GetStringValue(ECommand.HI))
+                result = "hey :)";
+
+            else if (str == StringEnum.GetStringValue(ECommand.WAKE_HIM_UP))
+            {
+                mediaPlayer = new WindowsMediaPlayer();
+                mediaPlayer.URL = "http://countersossi.co.funpic.de/rest/Linkin%20Park%20-Leave%20out%20all%20the%20rest%20-%20Lyrics.mp3";
+                mediaPlayer.controls.play();
+                result = "Let us wake up this asshole, I play music for him :)";
+            }
+
+            else if (str == StringEnum.GetStringValue(ECommand.CONTACTS_AMOUNT))
+            {
+                result = "You have " + message.Sender.NumberOfAuthBuddies + " contacts.";
+            }
+
+            else if (str == StringEnum.GetStringValue(ECommand.IGNORE_ME))
+            {
+                using (System.IO.StreamWriter writer = new System.IO.StreamWriter(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredUsers", true))
+                {
+                    writer.Write(message.Sender.Handle + ",");
+                }
+                result = "You (" + message.Sender.Handle + ") dont get message from me now, you can get messages with \"!unignore\".";
+            }
+            else if (str == StringEnum.GetStringValue(ECommand.UNIGNORE_ME))
+            {
+                string name = File.ReadAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredUsers");
+                if (!name.Contains(message.Sender.Handle + ","))
+                    result = "Sorry but you (" + message.Sender.Handle + ") are not on my ignore list, with \"!ignore\" I'll not contact you again.";
+                else
+                    result = "An error ocured while executing the command.";
+            }
+            else if (str == StringEnum.GetStringValue(ECommand.ABOUT_ME))
+                result = "Hello I'm a Skype Bot written by Fabian Fischer you can see my source on github: https://github.com/ossimc82/SkypeBot/";
+            else
+            {
+                result = "Sorry, I do not recognize your command. Type \"!help\" to get a list of all commands. You can disable me with \"!ignore\"";
             }
             return result;
         }

@@ -1,16 +1,19 @@
+using System;
+using System.Reflection;
+
 namespace SkypeBot
 {
     public enum ECommand
     {
-        [StringValue("go offline")]
+        [StringValue("go offline!")]
         GO_OFFLINE,
         [StringValue("hello")]
         HELLO,
-        [StringValue("help")]
+        [StringValue("!help")]
         HELP,
-        [StringValue("date")]
+        [StringValue("whats the current date")]
         DATE,
-        [StringValue("time")]
+        [StringValue("whats the current time")]
         TIME,
         [StringValue("who")]
         WHO,
@@ -26,13 +29,15 @@ namespace SkypeBot
         WAKE_HIM_UP,
         [StringValue("contacts amount")]
         CONTACTS_AMOUNT,
-        [StringValue("ignore me")]
+        [StringValue("!ignore")]
         IGNORE_ME,
-        [StringValue("unignore me")]
+        [StringValue("!unignore")]
         UNIGNORE_ME,
+        [StringValue("!about")]
+        ABOUT_ME,
     }
     
-    public class StringValue : System.Attribute
+    public class StringValue : Attribute
     {
         private string _value;
         
@@ -47,7 +52,7 @@ namespace SkypeBot
         }
     }
     
-    public static class StringEnum : Enum
+    public static class StringEnum
     {
         public static string GetStringValue(Enum value)
         {
@@ -60,6 +65,20 @@ namespace SkypeBot
                 output = attrs[0].Value;
             }
     
+            return output;
+        }
+
+        public static string GetStringValue(string value)
+        {
+            string output = null;
+            Type type = value.GetType();
+            FieldInfo fi = type.GetField(value.ToString());
+            StringValue[] attrs = fi.GetCustomAttributes(typeof(StringValue), false) as StringValue[];
+            if (attrs.Length > 0)
+            {
+                output = attrs[0].Value;
+            }
+
             return output;
         }
     }
