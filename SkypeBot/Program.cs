@@ -14,9 +14,14 @@ namespace SkypeBot
         static Skype skype;
         static WindowsMediaPlayer mediaPlayer;
         static string[] ignoredUsers;
+        static TUserStatus cuStatus;
 
         static void Main(string[] args)
         {
+            skype = new Skype();
+
+            if (!skype.Client.IsRunning)
+                skype.Client.Start(true, true);
             if (!Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot"))
                 Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot");
             if (!File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredUsers"))
@@ -25,14 +30,8 @@ namespace SkypeBot
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("[" + DateTime.Now + "] Loading...");
             Console.ResetColor();
-            skype = new Skype();
-            if (skype.CurrentUserStatus != TUserStatus.cusAway)
-            {
-                skype.ChangeUserStatus(TUserStatus.cusAway);
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine("[" + DateTime.Now + "] Set onlinestatus to: " + skype.CurrentUserStatus.ToString().Replace("cus", String.Empty));
-                Console.ResetColor();
-            }
+            cuStatus = skype.CurrentUserStatus;
+
             //Loads events
             skype.Attach();
             //Listen 
@@ -42,21 +41,20 @@ namespace SkypeBot
             Console.WriteLine("[" + DateTime.Now + "] Loading complete...");
             Console.ResetColor();
 
+            Console.CancelKeyPress += (sender, e) =>
+            {
+                Console.WriteLine("Terminating...");
+                System.Threading.Thread.Sleep(100);
+                Environment.Exit(0);
+            };
+
             while (true) { Console.Read(); }
         }
 
-        private static void skype_UserStatus(TUserStatus Status)
-        {
-            if (Status != TUserStatus.cusAway)
-            {
-                skype.CurrentUserStatus = TUserStatus.cusAway;
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine("[" + DateTime.Now + "] Set onlinestatus from: " + Status + "to: " + TUserStatus.cusAway.ToString().Replace("cus", String.Empty));
-                Console.ResetColor();
-                Status = TUserStatus.cusAway;
-            }
-            else { }
-        }
+        //private static void skype_UserStatus(TUserStatus Status)
+        //{
+        //    cuStatus = Status;
+        //}
 
         static void skype_MessageStatus(ChatMessage msg, TChatMessageStatus status)
         {
@@ -64,54 +62,36 @@ namespace SkypeBot
 
             if (status == TChatMessageStatus.cmsReceived)
             {
+                //first look if the user is ignored
                 for (int i = 0; i < ignoredUsers.Length; i++)
                 {
                     if (msg.Sender.Handle == ignoredUsers[i])
                     {
+                        if (msg.Body == "!unignore")
+                        {
+                            if (!File.ReadAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredUsers").Contains("ficken" + ","))
+                                skype.SendMessage(msg.Sender.Handle, "Sorry but you are not on my ignore list, with \"!ignore\" I'll not contact you again.");
+                            else
+                                File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredUsers", File.ReadAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredUsers").Replace(msg.Sender.Handle + ",", String.Empty));
+                        }
                         using (System.IO.StreamWriter writer = new System.IO.StreamWriter(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + @"\skypelog.log", true))
                         {
                             writer.WriteLine("[" + DateTime.Now + "] " + "[" + msg.Sender.Handle + ", " + msg.Sender.FullName + "]: " + msg.Body);
                         }
+
+                        //When you get a message from an ignored user
+                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                        Console.Write("Get IgnoredUser chat: [" + DateTime.Now + "] " + "[" + msg.Sender.Handle + ", " + msg.Sender.FullName + "]: ");
+                        Console.ResetColor();
+                        Console.Write(msg.Body + "\n\r");
+
                         goto skipSendMSG;
                     }
                 }
-
                 try
                 {
-                    //Ignores a user
-                    if (ProcessCommand(msg.Body) == "UserIgnore_true")
-                    {
-                        using (System.IO.StreamWriter writer = new System.IO.StreamWriter(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredUsers", true))
-                        {
-                            writer.Write(msg.Sender.Handle + ",");
-                        }
-                        skype.SendMessage(msg.Sender.Handle, "You (" + msg.Sender.Handle + ") dont get message from me now, you can get messages with \"!unignore\".");
-                    }
-                    //Unignores a user
-                    else if (ProcessCommand(msg.Body) == "UserIgnore_false")
-                    {
-                        string search_text = msg.Sender.Handle;
-                        string old;
-                        string n = String.Empty;
-                        StreamReader reader = File.OpenText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredUsers");
-                        while ((old = reader.ReadLine()) != null)
-                        {
-                            if (!old.Contains(search_text))
-                            {
-                                skype.SendMessage(msg.Sender.Handle, "Sorry but you are not on my ignore list, with \"!ignore\" I'll not contact you again.");
-                            }
-                        }
-                        reader.Close();
-                        File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredUsers", n);
-                    }
                     //Send processed message back to skype chat window
-                    else
-                    {
-                        skype.SendMessage(msg.Sender.Handle, ProcessCommand(msg.Body)
-                            .Replace("userHandle", msg.Sender.Handle)
-                            .Replace("userFullName", msg.Sender.FullName)
-                            .Replace("UserCount", msg.Sender.NumberOfAuthBuddies.ToString()));
-                    }
+                    skype.SendMessage(msg.Sender.Handle, ProcessCommand(msg.Body, msg));
                 }
                 catch (Exception ex)
                 {
@@ -119,36 +99,40 @@ namespace SkypeBot
                     Console.WriteLine(ex.ToString());
                     Console.ResetColor();
                 }
-
-                //When the bot sends the ressult
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.Write("Send Chat: [" + DateTime.Now + "] " + "To [" + msg.Sender.Handle + ", " + msg.Sender.FullName + "]: ");
-                Console.ResetColor();
-                Console.Write(ProcessCommand(msg.Body).Replace("userHandle", msg.Sender.Handle).Replace("userFullName", msg.Sender.FullName).Replace("UserCount", msg.Sender.NumberOfAuthBuddies.ToString()) + "\n\r");
-
-            skipSendMSG:
                 //When you get a message
                 Console.ForegroundColor = ConsoleColor.Magenta;
                 Console.Write("Get chat: [" + DateTime.Now + "] " + "[" + msg.Sender.Handle + ", " + msg.Sender.FullName + "]: ");
                 Console.ResetColor();
                 Console.Write(msg.Body + "\n\r");
+
+                //When the bot sends the ressult
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.Write("Send Chat: [" + DateTime.Now + "] " + "To [" + msg.Sender.Handle + ", " + msg.Sender.FullName + "]: ");
+                Console.ResetColor();
+                Console.Write(ProcessCommand(msg.Body, msg) + "\n\r");
+            skipSendMSG: { }
             }
         }
 
-        static string ProcessCommand(string str)
+        static string ProcessCommand(string str, ChatMessage message)
         {
             string result;
             //Here are the the words that the bot understands.
             switch (str)
             {
                 case "go offline!":
-                    result = "go_offline_true";
-                    break;
+                    {
+                        //you will go back online after 5 sec
+                        skype.ChangeUserStatus(TUserStatus.cusOffline);
+                        System.Threading.Thread.Sleep(5000);
+                        skype.ChangeUserStatus(cuStatus);
+                        result = "Back :)";
+                    } break;
                 case "hello":
                     result = "Hello!";
                     break;
                 case "!help":
-                    result = "go offline!, hello, !help, date, time, who, who am i?, penis, your mother, hi, wake him up!!!, my contacts, !ignore, !unignore";
+                    result = "go offline!, hello, !help, date, time, who, who am i?, penis, your mother, hi, wake him up!!!, contactsamount, !ignore, !unignore";
                     break;
                 case "date":
                     result = "Current Date is: " + DateTime.Now.ToLongDateString();
@@ -160,7 +144,7 @@ namespace SkypeBot
                     result = "You write with a skype bot, enjoy";
                     break;
                 case "who am i?":
-                    result = "you are \"userHandle\" and your Fullname is \"userFullName\"";
+                    result = "you are " + message.Sender.Handle + " and your Fullname is " + message.Sender.FullName;
                     break;
                 case "penis":
                     result = "vagina";
@@ -172,41 +156,36 @@ namespace SkypeBot
                     result = "hey :)";
                     break;
                 case "wake him up!!!":
-                    result = "wake_up = true";
-                    break;
-                case "my contacts":
-                    result = "You have UserCount contacts.";
+                    {
+                        mediaPlayer = new WindowsMediaPlayer();
+                        mediaPlayer.URL = "http://countersossi.co.funpic.de/rest/Linkin%20Park%20-Leave%20out%20all%20the%20rest%20-%20Lyrics.mp3";
+                        mediaPlayer.controls.play();
+                        result = "Let us wake up this asshole, I play music for him :)";
+                    } break;
+                case "contactsamount":
+                    result = "You have " + message.Sender.NumberOfAuthBuddies + " contacts.";
                     break;
                 case "!ignore":
-                    result = "UserIgnore_true";
-                    break;
+                    {
+                        using (System.IO.StreamWriter writer = new System.IO.StreamWriter(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredUsers", true))
+                        {
+                            writer.Write(message.Sender.Handle + ",");
+                        }
+                        result = "You (" + message.Sender.Handle + ") dont get message from me now, you can get messages with \"!unignore\".";
+                    } break;
                 case "!unignore":
-                    result = "UserIgnore_false";
-                    break;
+                    {
+                        string name = File.ReadAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredUsers");
+                        if (!name.Contains(message.Sender.Handle + ","))
+                            result = "Sorry but you (" + message.Sender.Handle + ") are not on my ignore list, with \"!ignore\" I'll not contact you again.";
+                        else
+                            result = "An error ocured while executing the command.";
+                    } break;
                 default:
                     result = "Sorry, I do not recognize your command. Type \"!help\" to get a list of all commands. You can disable me with \"!ignore\"";
                     break;
             }
-
-            if (result == "wake_up = true")
-            {
-                mediaPlayer = new WindowsMediaPlayer();
-                mediaPlayer.URL = "http://countersossi.co.funpic.de/rest/Linkin%20Park%20-Leave%20out%20all%20the%20rest%20-%20Lyrics.mp3";
-                mediaPlayer.controls.play();
-                return "Let us wake up this asshole, I play music for him :)";
-            }
-            else if (result == "go_offline_true")
-            {
-                //you will go back online after 5 sec
-                skype.ChangeUserStatus(TUserStatus.cusOffline);
-                System.Threading.Thread.Sleep(5000);
-                skype.ChangeUserStatus(TUserStatus.cusAway);
-                return "";
-            }
-            else
-            {
-                return result;
-            }
+            return result;
         }
     }
 
