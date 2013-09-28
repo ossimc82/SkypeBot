@@ -122,7 +122,7 @@ namespace SkypeBot
             //Here are the the words that the bot understands.
             switch (str.Remove(0, 1))
             {
-                case (string)ECommand.GO_OFFLINE:
+                case StringEnum.GetStringValue(ECommand.GO_OFFLINE):
                     {
                         //you will go back online after 5 sec
                         skype.ChangeUserStatus(TUserStatus.cusOffline);
@@ -130,10 +130,10 @@ namespace SkypeBot
                         skype.ChangeUserStatus(curStatus);
                         result = "Back :)";
                     } break;
-                case (string)ECommand.HELLO:
+                case StringEnum.GetStringValue(ECommand.HELLO):
                     result = "Hello!";
                     break;
-                case (string)ECommand.HELP:
+                case StringEnum.GetStringValue(ECommand.HELP):
                     {
                         foreach(var i in Enum.GetValues(typeof(ECommand)))
                         {
@@ -148,38 +148,38 @@ namespace SkypeBot
                         }
                     }
                     break;
-                case (string)ECommand.DATE:
+                case StringEnum.GetStringValue(ECommand.DATE):
                     result = "Current Date is: " + DateTime.Now.ToLongDateString();
                     break;
-                case (string)ECommand.TIME:
+                case StringEnum.GetStringValue(ECommand.TIME):
                     result = "Current Time is: " + DateTime.Now.ToLongTimeString();
                     break;
-                case (string)ECommand.WHO:
+                case StringEnum.GetStringValue(ECommand.WHO):
                     result = "You write with a skype bot, enjoy";
                     break;
-                case (string)ECommand.WHO_AM_I:
+                case StringEnum.GetStringValue(ECommand.WHO_AM_I):
                     result = "you are " + message.Sender.Handle + " and your Fullname is " + message.Sender.FullName;
                     break;
-                case (string)ECommand.PENIS:
+                case StringEnum.GetStringValue(ECommand.PENIS):
                     result = "vagina";
                     break;
-                case (string)ECommand.YOUR_MOTHER:
+                case StringEnum.GetStringValue(ECommand.YOUR_MOTHER):
                     result = "your fish";
                     break;
-                case (string)ECommand.HI:
+                case StringEnum.GetStringValue(ECommand.HI):
                     result = "hey :)";
                     break;
-                case (string)ECommand.WAKE_HIM_UP:
+                case StringEnum.GetStringValue(ECommand.WAKE_HIM_UP):
                     {
                         mediaPlayer = new WindowsMediaPlayer();
                         mediaPlayer.URL = "http://countersossi.co.funpic.de/rest/Linkin%20Park%20-Leave%20out%20all%20the%20rest%20-%20Lyrics.mp3";
                         mediaPlayer.controls.play();
                         result = "Let us wake up this asshole, I play music for him :)";
                     } break;
-                case (string)ECommand.CONTACTS_AMOUNT:
+                case StringEnum.GetStringValue(ECommand.CONTACTS_AMOUNT):
                     result = "You have " + message.Sender.NumberOfAuthBuddies + " contacts.";
                     break;
-                case (string)ECommand.IGNORE_ME:
+                case StringEnum.GetStringValue(ECommand.IGNORE_ME):
                     {
                         using (System.IO.StreamWriter writer = new System.IO.StreamWriter(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredUsers", true))
                         {
@@ -187,7 +187,7 @@ namespace SkypeBot
                         }
                         result = "You (" + message.Sender.Handle + ") dont get message from me now, you can get messages with \"!unignore\".";
                     } break;
-                case (string)ECommand.UNIGNORE_ME:
+                case StringEnum.GetStringValue(ECommand.UNIGNORE_ME):
                     {
                         string name = File.ReadAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredUsers");
                         if (!name.Contains(message.Sender.Handle + ","))
