@@ -14,7 +14,7 @@ namespace SkypeBot
         static Skype skype;
         static WindowsMediaPlayer mediaPlayer;
         static string[] ignoredUsers;
-        static TUserStatus cuStatus;
+        static TUserStatus curStatus;
 
         static void Main(string[] args)
         {
@@ -30,15 +30,16 @@ namespace SkypeBot
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("[" + DateTime.Now + "] Loading...");
             Console.ResetColor();
-            cuStatus = skype.CurrentUserStatus;
+            curStatus = skype.CurrentUserStatus;
 
             //Loads events
             skype.Attach();
             //Listen 
             skype.MessageStatus += new _ISkypeEvents_MessageStatusEventHandler(skype_MessageStatus);
-            //skype.UserStatus += skype_UserStatus;
+            skype.UserStatus += new _ISkypeEvents_UserStatusEventHandler(skype_UserStatus);
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("[" + DateTime.Now + "] Loading complete...");
+            Console.Beep();
             Console.ResetColor();
 
             Console.CancelKeyPress += (sender, e) =>
@@ -51,10 +52,11 @@ namespace SkypeBot
             while (true) { Console.Read(); }
         }
 
-        //private static void skype_UserStatus(TUserStatus Status)
-        //{
-        //    cuStatus = Status;
-        //}
+        private static void skype_UserStatus(TUserStatus Status)
+        {
+            if (Status != TUserStatus.cusOffline || Status != TUserStatus.cusInvisible || Status != TUserStatus.cusSkypeMe || Status != TUserStatus.cusUnknown || Status != TUserStatus.cusNotAvailable)
+                curStatus = Status;
+        }
 
         static void skype_MessageStatus(ChatMessage msg, TChatMessageStatus status)
         {
@@ -125,7 +127,7 @@ namespace SkypeBot
                         //you will go back online after 5 sec
                         skype.ChangeUserStatus(TUserStatus.cusOffline);
                         System.Threading.Thread.Sleep(5000);
-                        skype.ChangeUserStatus(cuStatus);
+                        skype.ChangeUserStatus(curStatus);
                         result = "Back :)";
                     } break;
                 case "hello":
