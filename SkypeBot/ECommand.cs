@@ -35,6 +35,12 @@ namespace SkypeBot
         UNIGNORE_ME,
         [StringValue("!about")]
         ABOUT_ME,
+        [StringValue("!say")]
+        SAY,
+        [StringValue("!callequipment")]
+        DO_I_HAVE_CALLEQUIPMENT,
+        [StringValue("!aboutMe")]
+        ABOUT_YOU,
     }
     
     public class StringValue : Attribute
