@@ -22,9 +22,7 @@ namespace SkypeBot
             if (!skype.Client.IsRunning)
             {
                 skype.Client.Start(true, true);
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("[" + DateTime.Now + "] SkypeClient not running, the programm will start it now.");
-                Console.ResetColor();
+                Writer.WriteErrorln("[" + DateTime.Now + "] SkypeClient not running, the programm will start it now.");
                 System.Threading.Thread.Sleep(5000);
                 while (skype.CurrentUserStatus == TUserStatus.cusLoggedOut) { System.Threading.Thread.Sleep(5000); }
             }
@@ -33,9 +31,7 @@ namespace SkypeBot
             if (!File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredUsers"))
                 File.Create(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredUsers").Close();
 
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("[" + DateTime.Now + "] Loading...");
-            Console.ResetColor();
+            Writer.WriteSuccessln("[" + DateTime.Now + "] Loading...");
 
             //Loads events
             skype.Attach();
@@ -53,14 +49,11 @@ namespace SkypeBot
                     } break;
                 }
             }
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("[" + DateTime.Now + "] Loaded " + _users.Count + " contacts.");
-            Console.ResetColor();
 
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("[" + DateTime.Now + "] Loading complete...");
+            Writer.WriteSuccessln("[" + DateTime.Now + "] Loaded " + _users.Count + " contacts.");
+
+            Writer.WriteSuccessln("[" + DateTime.Now + "] Loading complete...");
             Console.Beep();
-            Console.ResetColor();
 
             Console.CancelKeyPress += (sender, e) =>
             {
@@ -98,9 +91,7 @@ namespace SkypeBot
                             }
 
                             //When you get a message from an ignored user
-                            Console.ForegroundColor = ConsoleColor.DarkYellow;
-                            Console.Write("Get IgnoredUser chat: [" + DateTime.Now + "] " + "[" + msg.Sender.Handle + ", " + msg.Sender.FullName + "]: ");
-                            Console.ResetColor();
+                            Writer.WriteIgnored("Get IgnoredUser chat: [" + DateTime.Now + "] " + "[" + msg.Sender.Handle + ", " + msg.Sender.FullName + "]: ");
                             Console.Write(msg.Body + "\n\r");
 
                             goto skipSendMSG;
@@ -120,27 +111,19 @@ namespace SkypeBot
                     }
                     catch (Exception ex)
                     {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine(ex.ToString());
-                        Console.ResetColor();
+                        Writer.WriteErrorln(ex.ToString());
                     }
                     //When you get a message
-                    Console.ForegroundColor = ConsoleColor.Magenta;
-                    Console.Write("Get chat: [" + DateTime.Now + "] " + "[" + msg.Sender.Handle + ", " + msg.Sender.FullName + "]: ");
-                    Console.ResetColor();
+                    Writer.WriteGetChat("Get chat: [" + DateTime.Now + "] " + "[" + msg.Sender.Handle + ", " + msg.Sender.FullName + "]: ");
                     Console.Write(msg.Body + "\n\r");
 
                     //When the bot sends the ressult
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.Write("Send Chat: [" + DateTime.Now + "] " + "To [" + msg.Sender.Handle + ", " + msg.Sender.FullName + "]: ");
-                    Console.ResetColor();
+                    Writer.WriteSuccess("Send Chat: [" + DateTime.Now + "] " + "To [" + msg.Sender.Handle + ", " + msg.Sender.FullName + "]: ");
                     Console.Write(CommandProcessor.ProcessCommand(msg.Body, msg) + "\n\r");
                 }
                 else
                 {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine("[" + DateTime.Now + "] Blocked sending message to: " + msg.Sender.Handle);
-                    Console.ResetColor();
+                    Writer.WriteWarningln("[" + DateTime.Now + "] Blocked sending message to: " + msg.Sender.Handle);
                 }
             }
         skipSendMSG: { }
