@@ -14,6 +14,7 @@ namespace SkypeBot
     {
         private static WindowsMediaPlayer mediaPlayer = new WindowsMediaPlayer();
         private static Skype skype = new Skype();
+        private static string[] permitedUsers;
 
         public static string ProcessCommand(string str, ChatMessage message)
         {
@@ -106,15 +107,45 @@ namespace SkypeBot
 
             else if (str.Equals(StringEnum.GetStringValue(ECommand.WAKE_HIM_UP)))
             {
-                mediaPlayer = new WindowsMediaPlayer();
-                mediaPlayer.URL = "http://countersossi.co.funpic.de/rest/Linkin%20Park%20-Leave%20out%20all%20the%20rest%20-%20Lyrics.mp3";
-                mediaPlayer.controls.play();
-                result = "Let us wake up this asshole, I play music for him :)";
+                // %appdata%\SkypeBot
+                permitedUsers = File.ReadAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredChats").Split(',');
+                
+                for (int i = 0; i < permitedUsers.Length; i++)
+                {
+                    if (message.Sender.Handle == permitedUsers[i])
+                    {
+                        mediaPlayer = new WindowsMediaPlayer();
+                        mediaPlayer.URL = "http://countersossi.co.funpic.de/rest/Linkin%20Park%20-Leave%20out%20all%20the%20rest%20-%20Lyrics.mp3";
+                        mediaPlayer.controls.play();
+                        result = "Let us wake up this asshole, I play music for him :)";
+                        break;
+                    }
+                    else
+                        result = "MOTHERFUCKER (angry), You do not have permission to use this command!!!!!!!!";
+                }
             }
 
             else if (str.Equals(StringEnum.GetStringValue(ECommand.CONTACTS_AMOUNT)))
             {
                 result = "You have " + message.Sender.NumberOfAuthBuddies + " contacts.";
+            }
+
+            else if (str.Equals(StringEnum.GetStringValue(ECommand.IGNORE_CHAT)))
+            {
+                using (System.IO.StreamWriter writer = new System.IO.StreamWriter(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredChats", true))
+                {
+                    writer.Write(message.Chat.Name + ",");
+                }
+                result = "This conversation (" + message.Chat.Name + ") dont get messages from me now, you can enable me with \"!unignore_chat\".";
+            }
+
+            else if (str.Equals(StringEnum.GetStringValue(ECommand.UNIGNORE_CHAT)))
+            {
+                string name = File.ReadAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredUsers");
+                if (!name.Contains(message.Chat.Name + ","))
+                    result = "Sorry but this conversation (" + message.Chat.Name + ") is not in my ignore list, with \"!ignore_chat\" I'll not contact this group again.";
+                else
+                    result = "An error ocured while executing the command.";
             }
 
             else if (str.Equals(StringEnum.GetStringValue(ECommand.IGNORE_ME)))
@@ -142,7 +173,12 @@ namespace SkypeBot
 
             else
             {
-                result = "Sorry, I do not recognize your command. Type \"!help\" to get a list of all commands. You can disable me with \"!ignore\"";
+                if (message.Type == TChatMessageType.cmeSaid)
+                {
+                    result = "Sorry, I do not recognize your command. Type \"!help\" to get a list of all commands. You can disable me in this chat with \"!ignore_chat\"";
+                }
+                else
+                    result = "Sorry, I do not recognize your command. Type \"!help\" to get a list of all commands. You can disable me with \"!ignore\"";
             }
             return result;
         }
