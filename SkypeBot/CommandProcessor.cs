@@ -17,7 +17,7 @@ namespace SkypeBot
 
         public static string ProcessCommand(string str, ChatMessage message)
         {
-            string result = string.Empty;
+            string result = String.Empty;
 
             //Here are the the words that the bot understands.
             if (str.Equals(StringEnum.GetStringValue(ECommand.GO_OFFLINE)))
@@ -123,7 +123,7 @@ namespace SkypeBot
                 {
                     writer.Write(message.Sender.Handle + ",");
                 }
-                result = "You (" + message.Sender.Handle + ") dont get message from me now, you can get messages with \"!unignore\".";
+                result = "You (" + message.Sender.Handle + ") dont get messages from me now, you can enable me with \"!unignore\".";
             }
 
             else if (str.Equals(StringEnum.GetStringValue(ECommand.UNIGNORE_ME)))
