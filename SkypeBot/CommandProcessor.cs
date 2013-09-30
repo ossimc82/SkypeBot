@@ -32,8 +32,7 @@ namespace SkypeBot
             else if (str.Equals(StringEnum.GetStringValue(ECommand.SAY)))
             {
                 if (str.StartsWith("!say"))
-
-                result = "Usage: !say <Your Text>";
+                    result = "Usage: !say <Your Text>";
             }
 
             else if (str.Equals(StringEnum.GetStringValue(ECommand.DO_I_HAVE_CALLEQUIPMENT)))
@@ -44,7 +43,7 @@ namespace SkypeBot
                     result = "You don't have Call Equipment!";
             }
 
-            else if (str.Equals(StringEnum.GetStringValue(ECommand.ABOUT_ME)))
+            else if (str.Equals(StringEnum.GetStringValue(ECommand.ABOUT_YOU)))
             {
                 result = "About you: " + message.Sender.About;
             }
@@ -173,10 +172,12 @@ namespace SkypeBot
 
             else
             {
-                if (message.Type == TChatMessageType.cmeSaid)
-                {
+                int UserCount = 0;
+                foreach(var i in message.Chat.Members)
+                    UserCount++;
+
+                if (UserCount > 2)
                     result = "Sorry, I do not recognize your command. Type \"!help\" to get a list of all commands. You can disable me in this chat with \"!ignore_chat\"";
-                }
                 else
                     result = "Sorry, I do not recognize your command. Type \"!help\" to get a list of all commands. You can disable me with \"!ignore\"";
             }
