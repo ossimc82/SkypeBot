@@ -13,9 +13,10 @@ namespace SkypeBot
         private static string[] ignoredUsers;
         private static string[] ignoredChats;
         static Skype skype;
-        public static bool IsChatIgnored(ChatMessage msg)
+
+        public static bool IsUserIgnored(ChatMessage msg)
         {
-            ignoredChats = File.ReadAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredChats").Split(',');
+            ignoredUsers = File.ReadAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredChats").Split(',');
             skype = new Skype();
             
             for (int i = 0; i < ignoredUsers.Length; i++)
@@ -43,9 +44,9 @@ namespace SkypeBot
             return false;
         }
 
-        public static bool IsUserIgnored(ChatMessage msg)
+        public static bool IsChatIgnored(ChatMessage msg)
         {
-            ignoredUsers = File.ReadAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredUsers").Split(',');
+            ignoredChats = File.ReadAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredUsers").Split(',');
 
             for (int i = 0; i < ignoredChats.Length; i++)
             {
