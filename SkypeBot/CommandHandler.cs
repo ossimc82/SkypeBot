@@ -10,7 +10,7 @@ using WMPLib;
 
 namespace SkypeBot
 {
-    public static class CommandProcessor
+    public static class CommandHandler
     {
         private static WindowsMediaPlayer mediaPlayer = new WindowsMediaPlayer();
         private static Skype skype = new Skype();
@@ -162,11 +162,7 @@ namespace SkypeBot
             #region IGNORE_CHAT
             else if (str.Equals(StringEnum.GetStringValue(ECommand.IGNORE_CHAT)))
             {
-                using (System.IO.StreamWriter writer = new System.IO.StreamWriter(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredChats", true))
-                {
-                    writer.Write(message.Chat.Name + ",");
-                }
-                UserList.LoadIgnoreList();
+                FileHandler.Write(message);
                 result = "This conversation (" + message.Chat.Name + ") dont get messages from me now, you can enable me with \"!unignore_chat\".";
             }
             #endregion
@@ -185,11 +181,7 @@ namespace SkypeBot
             #region IGNORE_ME
             else if (str.Equals(StringEnum.GetStringValue(ECommand.IGNORE_ME)))
             {
-                using (System.IO.StreamWriter writer = new System.IO.StreamWriter(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredUsers", true))
-                {
-                    writer.Write(message.Sender.Handle + ",");
-                }
-                UserList.LoadIgnoreList();
+                FileHandler.Write(message, false);
                 result = "You (" + message.Sender.Handle + ") dont get messages from me now, you can enable me with \"!unignore\".";
             }
             #endregion

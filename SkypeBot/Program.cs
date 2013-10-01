@@ -26,7 +26,7 @@ namespace SkypeBot
                 System.Threading.Thread.Sleep(5000);
                 while (skype.CurrentUserStatus == TUserStatus.cusLoggedOut) { System.Threading.Thread.Sleep(5000); }
             }
-            FileController.CheckFiles();
+            FileHandler.CheckFiles();
             Writer.WriteSuccessln("[" + DateTime.Now + "] Loading...");
             Initialize:
             try
@@ -36,8 +36,8 @@ namespace SkypeBot
                 //Listen 
                 skype.MessageStatus += new _ISkypeEvents_MessageStatusEventHandler(skype_MessageStatus);
                 curStatus = skype.CurrentUserStatus;
-                UserList.GetContacts();
-                UserList.LoadIgnoreList();
+                UserListHandler.GetContacts();
+                UserListHandler.LoadIgnoreList();
             }
             catch
             {
@@ -66,31 +66,9 @@ namespace SkypeBot
             {
                 if (msg.Chat.Members.Count > 2)
                 {
-                    if (!UserList.IsChatIgnored(msg))
+                    if (!UserListHandler.IsChatIgnored(msg))
                     {
-                        try
-                        {
-                            if (msg.Body.StartsWith("!say "))
-                            {
-                                msg.Chat.SendMessage(msg.Body.Replace("!say ", String.Empty));
-                            }
-                            else
-                            {
-                                //Send processed message back to skype chat window
-                                msg.Chat.SendMessage(CommandProcessor.ProcessCommand(msg.Body, msg));
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            Writer.WriteErrorln(ex.ToString());
-                        }
-                        //When you get a message
-                        Writer.WriteGetChat("Get chat: [" + DateTime.Now + "] " + "[" + msg.Chat.Name + ", " + msg.Chat.FriendlyName + "]: ");
-                        Console.Write(msg.Body + "\n\r");
-
-                        //When the bot sends the ressult
-                        Writer.WriteSuccess("Send Chat: [" + DateTime.Now + "] " + "To [" + msg.Chat.Name + ", " + msg.Chat.FriendlyName + "]: ");
-                        Console.Write(CommandProcessor.ProcessCommand(msg.Body, msg) + "\n\r");
+                        ChatHandler.HandleGroupChat(msg);
                     }
                     else { }
                 }
@@ -98,31 +76,9 @@ namespace SkypeBot
                 {
                     if (_users.Contains(msg.Sender.Handle))
                     {
-                        if (!UserList.IsUserIgnored(msg))
+                        if (!UserListHandler.IsUserIgnored(msg))
                         {
-                            try
-                            {
-                                if (msg.Body.StartsWith("!say "))
-                                {
-                                    skype.SendMessage(msg.Sender.Handle, msg.Body.Replace("!say ", String.Empty));
-                                }
-                                else
-                                {
-                                    //Send processed message back to skype chat window
-                                    skype.SendMessage(msg.Sender.Handle, CommandProcessor.ProcessCommand(msg.Body, msg));
-                                }
-                            }
-                            catch (Exception ex)
-                            {
-                                Writer.WriteErrorln(ex.ToString());
-                            }
-                            //When you get a message
-                            Writer.WriteGetChat("Get chat: [" + DateTime.Now + "] " + "[" + msg.Sender.Handle + ", " + msg.Sender.FullName + "]: ");
-                            Console.Write(msg.Body + "\n\r");
-
-                            //When the bot sends the ressult
-                            Writer.WriteSuccess("Send Chat: [" + DateTime.Now + "] " + "To [" + msg.Sender.Handle + ", " + msg.Sender.FullName + "]: ");
-                            Console.Write(CommandProcessor.ProcessCommand(msg.Body, msg) + "\n\r");
+                            ChatHandler.HandleUserChat(msg);
                         }
                         else { }
                     }
