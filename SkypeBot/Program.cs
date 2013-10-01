@@ -26,15 +26,7 @@ namespace SkypeBot
                 System.Threading.Thread.Sleep(5000);
                 while (skype.CurrentUserStatus == TUserStatus.cusLoggedOut) { System.Threading.Thread.Sleep(5000); }
             }
-            if (!Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot"))
-                Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot");
-            if (!File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredUsers"))
-                File.Create(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredUsers").Close();
-            if (!File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredChats"))
-                File.Create(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredChats").Close();
-            if (!File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\permitedUsers.user"))
-                File.Create(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\permitedUsers.user").Close();
-
+            FileController.CheckFiles();
             Writer.WriteSuccessln("[" + DateTime.Now + "] Loading...");
             Initialize:
             try
@@ -45,6 +37,7 @@ namespace SkypeBot
                 skype.MessageStatus += new _ISkypeEvents_MessageStatusEventHandler(skype_MessageStatus);
                 curStatus = skype.CurrentUserStatus;
                 UserList.GetContacts();
+                UserList.LoadIgnoreList();
             }
             catch
             {
@@ -52,9 +45,7 @@ namespace SkypeBot
                 System.Threading.Thread.Sleep(100);
                 goto Initialize;
             }
-
             Writer.WriteSuccessln("[" + DateTime.Now + "] Loaded " + _users.Count + " contacts.");
-
             Writer.WriteSuccessln("[" + DateTime.Now + "] Loading complete...");
             Console.Beep();
 
@@ -71,14 +62,9 @@ namespace SkypeBot
 
         static void skype_MessageStatus(ChatMessage msg, TChatMessageStatus status)
         {
-            int UserCount = 0;
-
             if (status == TChatMessageStatus.cmsReceived)
             {
-                foreach (var y in msg.Chat.Members)
-                    UserCount++;
-
-                if (UserCount > 2)
+                if (msg.Chat.Members.Count > 2)
                 {
                     if (!UserList.IsChatIgnored(msg))
                     {
@@ -106,6 +92,7 @@ namespace SkypeBot
                         Writer.WriteSuccess("Send Chat: [" + DateTime.Now + "] " + "To [" + msg.Chat.Name + ", " + msg.Chat.FriendlyName + "]: ");
                         Console.Write(CommandProcessor.ProcessCommand(msg.Body, msg) + "\n\r");
                     }
+                    else { }
                 }
                 else
                 {
@@ -137,6 +124,7 @@ namespace SkypeBot
                             Writer.WriteSuccess("Send Chat: [" + DateTime.Now + "] " + "To [" + msg.Sender.Handle + ", " + msg.Sender.FullName + "]: ");
                             Console.Write(CommandProcessor.ProcessCommand(msg.Body, msg) + "\n\r");
                         }
+                        else { }
                     }
                     else
                     {
@@ -144,6 +132,18 @@ namespace SkypeBot
                     }
                 }
             }
+            //if (status == TChatMessageStatus.cmsSending)
+            //{
+            //    if (msg.Body.StartsWith("!say "))
+            //    {
+            //        msg.Chat.SendMessage(msg.Body.Replace("!say ", String.Empty));
+            //    }
+            //    else
+            //    {
+            //        //Send processed message back to skype chat window
+            //        msg.Chat.SendMessage(CommandProcessor.ProcessCommand(msg.Body, msg));
+            //    }
+            //}
         }
     }
 }

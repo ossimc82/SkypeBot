@@ -10,65 +10,76 @@ namespace SkypeBot
 {
     public static class UserList
     {
+        private static List<string> Users;
+        private static List<string> Chats;
         private static string[] ignoredUsers;
         private static string[] ignoredChats;
         static Skype skype;
 
-        public static bool IsUserIgnored(ChatMessage msg)
+        public static void LoadIgnoreList()
         {
-            ignoredUsers = File.ReadAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredChats").Split(',');
-            skype = new Skype();
+            Users = new List<string>();
+            Chats = new List<string>();
+            ignoredUsers = File.ReadAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredUsers").Split(',');
+            ignoredChats = File.ReadAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredChats").Split(',');
             
             for (int i = 0; i < ignoredUsers.Length; i++)
             {
-                if (msg.Sender.Handle == ignoredUsers[i])
-                {
-                    if (msg.Body == "!unignore")
-                    {
-                        if (!File.ReadAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredUsers").Contains(msg.Sender.Handle + ","))
-                            skype.SendMessage(msg.Sender.Handle, "Sorry but you are not on my ignore list, with \"!ignore\" I'll not contact you again.");
-                        else
-                            File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredUsers", File.ReadAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredUsers").Replace(msg.Sender.Handle + ",", String.Empty));
-                    }
-                    using (System.IO.StreamWriter writer = new System.IO.StreamWriter(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + @"\skypelog.log", true))
-                    {
-                        writer.WriteLine("[" + DateTime.Now + "] " + "[" + msg.Sender.Handle + ", " + msg.Sender.FullName + "]: " + msg.Body);
-                    }
+                Users.Add(ignoredUsers[i]);
+            }
 
-                    //When you get a message from an ignored chat
-                    Writer.WriteIgnored("Get IgnoredUser chat: [" + DateTime.Now + "] " + "[" + msg.Sender.Handle + ", " + msg.Sender.FullName + "]: ");
-                    Console.Write(msg.Body + "\n\r");
-                    return true;
+            for (int i = 0; i < ignoredChats.Length; i++)
+            {
+                Chats.Add(ignoredChats[i]);
+            }
+        }
+
+        public static bool IsUserIgnored(ChatMessage msg)
+        {
+            skype = new Skype();
+
+            if (Users.Contains(msg.Sender.Handle))
+            {
+                if (msg.Body == "!unignore")
+                {
+                    if (!File.ReadAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredUsers").Contains(msg.Sender.Handle + ","))
+                        skype.SendMessage(msg.Sender.Handle, "Sorry but you are not on my ignore list, with \"!ignore\" I'll not contact you again.");
+                    else
+                        File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredUsers", File.ReadAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredUsers").Replace(msg.Sender.Handle + ",", String.Empty));
                 }
+                using (System.IO.StreamWriter writer = new System.IO.StreamWriter(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + @"\skypelog.log", true))
+                {
+                    writer.WriteLine("[" + DateTime.Now + "] " + "[" + msg.Sender.Handle + ", " + msg.Sender.FullName + "]: " + msg.Body);
+                }
+
+                //When you get a message from an ignored chat
+                Writer.WriteIgnored("Get IgnoredUser chat: [" + DateTime.Now + "] " + "[" + msg.Sender.Handle + ", " + msg.Sender.FullName + "]: ");
+                Console.Write(msg.Body + "\n\r");
+                return true;
             }
             return false;
         }
 
         public static bool IsChatIgnored(ChatMessage msg)
         {
-            ignoredChats = File.ReadAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredUsers").Split(',');
-
-            for (int i = 0; i < ignoredChats.Length; i++)
+            if(Chats.Contains(msg.Chat.Name))
             {
-                if (msg.Chat.Name == ignoredChats[i])
+                if (msg.Body == "!unignore_chat")
                 {
-                    if (msg.Body == "!unignore_chat")
-                    {
-                        if (!File.ReadAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredChats").Contains(msg.Chat.Name + ","))
-                            msg.Chat.SendMessage("Sorry but this group is not in my ignore list, with \"!ignore_chat\" I'll not contact this group again.");
-                        else
-                            File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredChats", File.ReadAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredChats").Replace(msg.Chat.Name + ",", String.Empty));
-                    }
-                    using (System.IO.StreamWriter writer = new System.IO.StreamWriter(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + @"\skypelog_chats.log", true))
-                    {
-                        writer.WriteLine("[" + DateTime.Now + "] " + "[" + msg.Chat.Name + ", " + msg.Chat.FriendlyName + "]: " + msg.Body);
-                    }
-
-                    //When you get a message from an ignored user
-                    Writer.WriteIgnored("Get IgnoredChat message: [" + DateTime.Now + "] " + "[" + msg.Chat.Name + ", " + msg.Chat.FriendlyName + "]: ");
-                    Console.Write(msg.Body + "\n\r");
-                    return true;
+                    if (!Chats.Contains(msg.Chat.Name))
+                        msg.Chat.SendMessage("Sorry but this group is not in my ignore list, with \"!ignore_chat\" I'll not contact this group again.");
+                    else
+                        File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredChats", File.ReadAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredChats").Replace(msg.Chat.Name + ",", String.Empty));
                 }
+                using (System.IO.StreamWriter writer = new System.IO.StreamWriter(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + @"\skypelog_chats.log", true))
+                {
+                    writer.WriteLine("[" + DateTime.Now + "] " + "[" + msg.Chat.Name + ", " + msg.Chat.FriendlyName + "]: " + msg.Body);
+                }
+
+                //When you get a message from an ignored user
+                Writer.WriteIgnored("Get IgnoredChat message: [" + DateTime.Now + "] " + "[" + msg.Chat.Name + ", " + msg.Chat.FriendlyName + "]: ");
+                Console.Write(msg.Body + "\n\r");
+                return true;
             }
             return false;
         }
