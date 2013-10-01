@@ -166,6 +166,7 @@ namespace SkypeBot
                 {
                     writer.Write(message.Chat.Name + ",");
                 }
+                UserList.LoadIgnoreList();
                 result = "This conversation (" + message.Chat.Name + ") dont get messages from me now, you can enable me with \"!unignore_chat\".";
             }
             #endregion
@@ -188,6 +189,7 @@ namespace SkypeBot
                 {
                     writer.Write(message.Sender.Handle + ",");
                 }
+                UserList.LoadIgnoreList();
                 result = "You (" + message.Sender.Handle + ") dont get messages from me now, you can enable me with \"!unignore\".";
             }
             #endregion

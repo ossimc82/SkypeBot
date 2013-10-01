@@ -45,7 +45,10 @@ namespace SkypeBot
                     if (!File.ReadAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredUsers").Contains(msg.Sender.Handle + ","))
                         skype.SendMessage(msg.Sender.Handle, "Sorry but you are not on my ignore list, with \"!ignore\" I'll not contact you again.");
                     else
+                    {
                         File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredUsers", File.ReadAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredUsers").Replace(msg.Sender.Handle + ",", String.Empty));
+                        UserList.LoadIgnoreList();
+                    }
                 }
                 using (System.IO.StreamWriter writer = new System.IO.StreamWriter(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + @"\skypelog.log", true))
                 {
@@ -69,7 +72,10 @@ namespace SkypeBot
                     if (!Chats.Contains(msg.Chat.Name))
                         msg.Chat.SendMessage("Sorry but this group is not in my ignore list, with \"!ignore_chat\" I'll not contact this group again.");
                     else
+                    {
                         File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredChats", File.ReadAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredChats").Replace(msg.Chat.Name + ",", String.Empty));
+                        UserList.LoadIgnoreList();
+                    }
                 }
                 using (System.IO.StreamWriter writer = new System.IO.StreamWriter(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + @"\skypelog_chats.log", true))
                 {
