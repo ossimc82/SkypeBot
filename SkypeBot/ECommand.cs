@@ -41,10 +41,6 @@ namespace SkypeBot
         DO_I_HAVE_CALLEQUIPMENT,
         [StringValue("!aboutMe")]
         ABOUT_YOU,
-        [StringValue("!ignore_chat")]
-        IGNORE_CHAT,
-        [StringValue("!unignore_chat")]
-        UNIGNORE_CHAT,
     }
     
     public class StringValue : Attribute

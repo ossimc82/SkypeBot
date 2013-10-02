@@ -8,7 +8,7 @@ using System.IO;
 using SKYPE4COMLib;
 using WMPLib;
 
-namespace SkypeBot
+namespace SkypeBot.Handlers
 {
     public static class CommandHandler
     {
@@ -159,39 +159,19 @@ namespace SkypeBot
             }
             #endregion
 
-            #region IGNORE_CHAT
-            else if (str.Equals(StringEnum.GetStringValue(ECommand.IGNORE_CHAT)))
-            {
-                FileHandler.Write(message);
-                result = "This conversation (" + message.Chat.Name + ") dont get messages from me now, you can enable me with \"!unignore_chat\".";
-            }
-            #endregion
-
-            #region UNIGNORE_CHAT
-            else if (str.Equals(StringEnum.GetStringValue(ECommand.UNIGNORE_CHAT)))
-            {
-                string name = File.ReadAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredUsers");
-                if (!name.Contains(message.Chat.Name + ","))
-                    result = "Sorry but this conversation (" + message.Chat.Name + ") is not in my ignore list, with \"!ignore_chat\" I'll not contact this group again.";
-                else
-                    result = "An error ocured while executing the command.";
-            }
-            #endregion
-
             #region IGNORE_ME
             else if (str.Equals(StringEnum.GetStringValue(ECommand.IGNORE_ME)))
             {
-                FileHandler.Write(message, false);
-                result = "You (" + message.Sender.Handle + ") dont get messages from me now, you can enable me with \"!unignore\".";
+                FileHandler.Write(message);
+                result = "This chat (" + message.Chat.FriendlyName + "(" + message.Chat.Name + ")) dont get messages from me now, you can enable me with \"!unignore\".";
             }
             #endregion
 
             #region UNIGNORE_ME
             else if (str.Equals(StringEnum.GetStringValue(ECommand.UNIGNORE_ME)))
             {
-                string name = File.ReadAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredUsers");
-                if (!name.Contains(message.Sender.Handle + ","))
-                    result = "Sorry but you (" + message.Sender.Handle + ") are not on my ignore list, with \"!ignore\" I'll not contact you again.";
+                if (!UserListHandler.Chats.Contains(message.Chat.Name + ","))
+                    result = "Sorry but this chat (" + message.Chat.FriendlyName + "(" + message.Chat.Name + ")) are not on my ignore list, with \"!ignore\" I'll not contact you again.";
                 else
                     result = "An error ocured while executing the command.";
             }
@@ -206,10 +186,7 @@ namespace SkypeBot
 
             else
             {
-                if (message.Chat.Members.Count > 2)
-                    result = "Sorry, I do not recognize your command. Type \"!help\" to get a list of all commands. You can disable me with \"!ignore\"";
-                else
-                    result = "Sorry, I do not recognize your command. Type \"!help\" to get a list of all commands. You can disable me in this chat with \"!ignore_chat\"";
+                result = "Sorry, I do not recognize your command. Type \"!help\" to get a list of all commands. You can disable me with \"!ignore\"";
             }
             return result;
         }

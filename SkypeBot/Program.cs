@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using SKYPE4COMLib;
+using SkypeBot.Handlers;
 
 namespace SkypeBot
 {
@@ -23,8 +24,8 @@ namespace SkypeBot
             {
                 skype.Client.Start(true, true);
                 Writer.WriteErrorln("[" + DateTime.Now + "] SkypeClient not running, the programm will start it now.");
-                System.Threading.Thread.Sleep(5000);
-                while (skype.CurrentUserStatus == TUserStatus.cusLoggedOut) { System.Threading.Thread.Sleep(5000); }
+                System.Threading.Thread.Sleep(12000);
+                while (skype.CurrentUserStatus == TUserStatus.cusLoggedOut) { System.Threading.Thread.Sleep(5000); Writer.WriteErrorln("Not logged in... Retrying"); }
             }
             FileHandler.CheckFiles();
             Writer.WriteSuccessln("[" + DateTime.Now + "] Loading...");
@@ -64,28 +65,9 @@ namespace SkypeBot
         {
             if (status == TChatMessageStatus.cmsReceived)
             {
-                if (msg.Chat.Members.Count > 2)
+                if (!UserListHandler.IsChatIgnored(msg))
                 {
-                    if (!UserListHandler.IsChatIgnored(msg))
-                    {
-                        ChatHandler.HandleGroupChat(msg);
-                    }
-                    else { }
-                }
-                else
-                {
-                    if (_users.Contains(msg.Sender.Handle))
-                    {
-                        if (!UserListHandler.IsUserIgnored(msg))
-                        {
-                            ChatHandler.HandleUserChat(msg);
-                        }
-                        else { }
-                    }
-                    else
-                    {
-                        Writer.WriteWarningln("[" + DateTime.Now + "] Blocked sending message to: " + msg.Sender.Handle);
-                    }
+                    ChatHandler.HandleChat(msg);
                 }
             }
             //if (status == TChatMessageStatus.cmsSending)
