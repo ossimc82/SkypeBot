@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SkypeBot.Handlers
@@ -36,7 +37,7 @@ namespace SkypeBot.Handlers
                 #region SHOW_FORM
                 else if (command.Equals(StringEnum.GetStringValue(ConsoleCommand.SHOW_FORM), StringComparison.InvariantCultureIgnoreCase))
                 {
-                    new Forms.UserController().ShowDialog();
+                    new Thread(() => new Forms.UserController().ShowDialog()).Start();
                 }
                 #endregion
 

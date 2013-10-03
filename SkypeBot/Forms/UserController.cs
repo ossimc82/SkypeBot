@@ -45,5 +45,10 @@ namespace SkypeBot.Forms
                 sendMSG.ShowDialog(this);
             }
         }
+
+        private void UserController_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Program.t.Abort();
+        }
     }
 }
