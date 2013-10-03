@@ -11,11 +11,12 @@ namespace SkypeBot.Handlers
     {
         public static void HandleChat(ChatMessage msg)
         {
+            string say = "!say ";
             try
             {
-                if (msg.Body.StartsWith("!say "))
+                if (msg.Body.StartsWith(say, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    msg.Chat.SendMessage(msg.Body.Replace("!say ", String.Empty));
+                    msg.Chat.SendMessage(msg.Body.Replace(say, String.Empty));
                 }
                 else
                 {

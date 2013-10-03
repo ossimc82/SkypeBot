@@ -15,7 +15,7 @@ namespace SkypeBot.Handlers
             try
             {
                 #region HELP
-                if (command.Equals(StringEnum.GetStringValue(ConsoleCommand.HELP)))
+                if (command.Equals(StringEnum.GetStringValue(ConsoleCommand.HELP), StringComparison.InvariantCultureIgnoreCase))
                 {
                     string output = null;
                     foreach (Enum i in Enum.GetValues(typeof(ConsoleCommand)))
@@ -27,7 +27,7 @@ namespace SkypeBot.Handlers
                 #endregion
 
                 #region CLEAR
-                else if (command.Equals(StringEnum.GetStringValue(ConsoleCommand.CLEAR)))
+                else if (command.Equals(StringEnum.GetStringValue(ConsoleCommand.CLEAR), StringComparison.InvariantCultureIgnoreCase))
                 {
                     Console.Clear();
                 }

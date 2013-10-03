@@ -22,7 +22,7 @@ namespace SkypeBot.Handlers
 
             //Here are the the words that the bot understands.
             #region GO_OFFLINE
-            if (str.Equals(StringEnum.GetStringValue(ChatCommand.GO_OFFLINE)))
+            if (str.Equals(StringEnum.GetStringValue(ChatCommand.GO_OFFLINE), StringComparison.InvariantCultureIgnoreCase))
             {
                 skype.ChangeUserStatus(TUserStatus.cusInvisible);
                 System.Threading.Thread.Sleep(5000);
@@ -32,7 +32,7 @@ namespace SkypeBot.Handlers
             #endregion
 
             #region SAY
-            else if (str.Equals(StringEnum.GetStringValue(ChatCommand.SAY)))
+            else if (str.Equals(StringEnum.GetStringValue(ChatCommand.SAY), StringComparison.InvariantCultureIgnoreCase))
             {
                 if (str.StartsWith("!say"))
                     result = "Usage: !say <Your Text>";
@@ -40,7 +40,7 @@ namespace SkypeBot.Handlers
             #endregion
 
             #region DO_I_HAVE_CALLEQUIPMENT
-            else if (str.Equals(StringEnum.GetStringValue(ChatCommand.DO_I_HAVE_CALLEQUIPMENT)))
+            else if (str.Equals(StringEnum.GetStringValue(ChatCommand.DO_I_HAVE_CALLEQUIPMENT), StringComparison.InvariantCultureIgnoreCase))
             {
                 if (message.Sender.HasCallEquipment)
                     result = "You have Call Equipment!";
@@ -50,21 +50,24 @@ namespace SkypeBot.Handlers
             #endregion
 
             #region ABOUT_YOU
-            else if (str.Equals(StringEnum.GetStringValue(ChatCommand.ABOUT_YOU)))
+            else if (str.Equals(StringEnum.GetStringValue(ChatCommand.ABOUT_YOU), StringComparison.InvariantCultureIgnoreCase))
             {
-                result = "About you: " + message.Sender.About;
+                if (String.IsNullOrWhiteSpace(message.Sender.About))
+                    result = "Cant parse your about status.";
+                else
+                    result = "About you: " + message.Sender.About;
             }
             #endregion
 
             #region HELLO
-            else if (str.Equals(StringEnum.GetStringValue(ChatCommand.HELLO)))
+            else if (str.Equals(StringEnum.GetStringValue(ChatCommand.HELLO), StringComparison.InvariantCultureIgnoreCase))
             {
                 result = "Hello!";
             }
             #endregion
 
             #region HELP
-            else if (str.Equals(StringEnum.GetStringValue(ChatCommand.HELP)))
+            else if (str.Equals(StringEnum.GetStringValue(ChatCommand.HELP), StringComparison.InvariantCultureIgnoreCase))
             {
                 foreach (Enum i in Enum.GetValues(typeof(ChatCommand)))
                 {
@@ -75,56 +78,56 @@ namespace SkypeBot.Handlers
             #endregion
 
             #region DATE
-            else if (str.Equals(StringEnum.GetStringValue(ChatCommand.DATE)))
+            else if (str.Equals(StringEnum.GetStringValue(ChatCommand.DATE), StringComparison.InvariantCultureIgnoreCase))
             {
                 result = "Current Date is: " + DateTime.Now.ToLongDateString();
             }
             #endregion
 
             #region TIME
-            else if (str.Equals(StringEnum.GetStringValue(ChatCommand.TIME)))
+            else if (str.Equals(StringEnum.GetStringValue(ChatCommand.TIME), StringComparison.InvariantCultureIgnoreCase))
             {
                 result = "Current Time is: " + DateTime.Now.ToLongTimeString();
             }
             #endregion
 
             #region WHO
-            else if (str.Equals(StringEnum.GetStringValue(ChatCommand.WHO)))
+            else if (str.Equals(StringEnum.GetStringValue(ChatCommand.WHO), StringComparison.InvariantCultureIgnoreCase))
             {
                 result = "You write with a skype bot, enjoy";
             }
             #endregion
 
             #region WHO_AM_I
-            else if (str.Equals(StringEnum.GetStringValue(ChatCommand.WHO_AM_I)))
+            else if (str.Equals(StringEnum.GetStringValue(ChatCommand.WHO_AM_I), StringComparison.InvariantCultureIgnoreCase))
             {
                 result = "you are " + message.Sender.Handle + " and your Fullname is " + message.Sender.FullName;
             }
             #endregion
 
             #region PENIS
-            else if (str.Equals(StringEnum.GetStringValue(ChatCommand.PENIS)))
+            else if (str.Equals(StringEnum.GetStringValue(ChatCommand.PENIS), StringComparison.InvariantCultureIgnoreCase))
             {
                 result = "vagina";
             }
             #endregion
 
             #region YOUR_MOTHER
-            else if (str.Equals(StringEnum.GetStringValue(ChatCommand.YOUR_MOTHER)))
+            else if (str.Equals(StringEnum.GetStringValue(ChatCommand.YOUR_MOTHER), StringComparison.InvariantCultureIgnoreCase))
             {
                 result = "your fish";
             }
             #endregion
 
             #region HI
-            else if (str.Equals(StringEnum.GetStringValue(ChatCommand.HI)))
+            else if (str.Equals(StringEnum.GetStringValue(ChatCommand.HI), StringComparison.InvariantCultureIgnoreCase))
             {
                 result = "hey :)";
             }
             #endregion
 
             #region WAKE_HIM_UP
-            else if (str.Equals(StringEnum.GetStringValue(ChatCommand.WAKE_HIM_UP)))
+            else if (str.Equals(StringEnum.GetStringValue(ChatCommand.WAKE_HIM_UP), StringComparison.InvariantCultureIgnoreCase))
             {
                 // %appdata%\SkypeBot
                 permitedUsers = File.ReadAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\permitedUsers.users").Split(',');
@@ -146,14 +149,14 @@ namespace SkypeBot.Handlers
             #endregion
 
             #region CONTACTS_AMOUNT
-            else if (str.Equals(StringEnum.GetStringValue(ChatCommand.CONTACTS_AMOUNT)))
+            else if (str.Equals(StringEnum.GetStringValue(ChatCommand.CONTACTS_AMOUNT), StringComparison.InvariantCultureIgnoreCase))
             {
                 result = "You have " + message.Sender.NumberOfAuthBuddies + " contacts.";
             }
             #endregion
 
             #region IGNORE_ME
-            else if (str.Equals(StringEnum.GetStringValue(ChatCommand.IGNORE_ME)))
+            else if (str.Equals(StringEnum.GetStringValue(ChatCommand.IGNORE_ME), StringComparison.InvariantCultureIgnoreCase))
             {
                 FileHandler.Write(message);
                 result = "This chat (" + message.Chat.FriendlyName + "(" + message.Chat.Name + ")) dont get messages from me now, you can enable me with \"!unignore\".";
@@ -161,7 +164,7 @@ namespace SkypeBot.Handlers
             #endregion
 
             #region UNIGNORE_ME
-            else if (str.Equals(StringEnum.GetStringValue(ChatCommand.UNIGNORE_ME)))
+            else if (str.Equals(StringEnum.GetStringValue(ChatCommand.UNIGNORE_ME), StringComparison.InvariantCultureIgnoreCase))
             {
                 if (!UserListHandler.Chats.Contains(message.Chat.Name + ","))
                     result = "Sorry but this chat (" + message.Chat.FriendlyName + "(" + message.Chat.Name + ")) are not on my ignore list, with \"!ignore\" I'll not contact you again.";
@@ -171,7 +174,7 @@ namespace SkypeBot.Handlers
             #endregion
 
             #region ABOUT_ME
-            else if (str.Equals(StringEnum.GetStringValue(ChatCommand.ABOUT_ME)))
+            else if (str.Equals(StringEnum.GetStringValue(ChatCommand.ABOUT_ME), StringComparison.InvariantCultureIgnoreCase))
             {
                 result = "Hello I'm a Skype Bot written by Fabian Fischer you can see my source on github: https://github.com/ossimc82/SkypeBot/";
             }

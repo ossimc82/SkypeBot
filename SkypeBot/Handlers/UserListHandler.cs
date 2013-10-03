@@ -29,7 +29,7 @@ namespace SkypeBot.Handlers
         {
             if(Chats.Contains(msg.Chat.Name))
             {
-                if (msg.Body == "!unignore")
+                if (msg.Body.Equals("!unignore", StringComparison.InvariantCultureIgnoreCase))
                 {
                     if (!Chats.Contains(msg.Chat.Name))
                         msg.Chat.SendMessage("Sorry but this chat is not in my ignore list, with \"!ignore\" I'll not contact this chat again.");
