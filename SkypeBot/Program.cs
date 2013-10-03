@@ -7,6 +7,7 @@ using System.IO;
 using SKYPE4COMLib;
 using SkypeBot.Handlers;
 using System.Windows.Forms;
+using System.Threading;
 
 namespace SkypeBot
 {
@@ -38,10 +39,10 @@ namespace SkypeBot
                 //Loads events
                 skype.Attach();
                 //Listen 
-                skype.MessageStatus += new _ISkypeEvents_MessageStatusEventHandler(skype_MessageStatus);
-                curStatus = skype.CurrentUserStatus;
                 UserListHandler.GetContacts();
                 UserListHandler.LoadIgnoreList();
+                skype.MessageStatus += new _ISkypeEvents_MessageStatusEventHandler(skype_MessageStatus);
+                curStatus = skype.CurrentUserStatus;
             }
             catch
             {
@@ -61,9 +62,9 @@ namespace SkypeBot
                 Environment.Exit(0);
             };
 
-            //System.Windows.Forms.Application.EnableVisualStyles();
-            //System.Windows.Forms.Application.SetCompatibleTextRenderingDefault(false);
-            //System.Windows.Forms.Application.Run(new UserController());
+            System.Windows.Forms.Application.EnableVisualStyles();
+            System.Windows.Forms.Application.SetCompatibleTextRenderingDefault(false);
+            new Thread(() => new UserController().ShowDialog()).Start();
 
             while (true) 
             {

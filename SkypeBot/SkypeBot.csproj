@@ -72,6 +72,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsoleCommand.cs" />
+    <Compile Include="Forms\SendMessage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SendMessage.Designer.cs">
+      <DependentUpon>SendMessage.cs</DependentUpon>
+    </Compile>
     <Compile Include="Handlers\ChatHandler.cs" />
     <Compile Include="Handlers\ChatCommandHandler.cs" />
     <Compile Include="ChatCommand.cs" />
@@ -132,6 +138,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Forms\SendMessage.resx">
+      <DependentUpon>SendMessage.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UserController.resx">
       <DependentUpon>UserController.cs</DependentUpon>
     </EmbeddedResource>
