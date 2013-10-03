@@ -11,14 +11,16 @@ using SkypeBot.Handlers;
 using SKYPE4COMLib;
 using SkypeBot.Forms;
 
-namespace SkypeBot
+namespace SkypeBot.Forms
 {
     public partial class UserController : Form
     {
+        private Skype skype;
         private SendMessage sendMSG;
 
         public UserController()
         {
+            skype = new Skype();
             InitializeComponent();
             listBox1.DataSource = Program._users;
             listBox2.DataSource = UserListHandler.Chats;
@@ -26,9 +28,27 @@ namespace SkypeBot
 
         private void listBox1_DoubleClick(object sender, EventArgs e)
         {
-            sendMSG = new Forms.SendMessage(this.listBox1.SelectedItem.ToString());
-            Skype skype = new Skype();
+            sendMSG = new SendMessage(this.listBox1.SelectedItem.ToString());
             sendMSG.ShowDialog();
+        }
+
+        private void listBox2_DoubleClick(object sender, EventArgs e)
+        {
+
+        }
+
+        private void listBox1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData == Keys.Enter)
+            {
+                sendMSG = new SendMessage(this.listBox1.SelectedItem.ToString());
+                sendMSG.ShowDialog();
+            }
+        }
+
+        private void UserController_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Program.t.Abort();
         }
     }
 }

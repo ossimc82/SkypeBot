@@ -18,6 +18,7 @@ namespace SkypeBot.Forms
 
         public SendMessage(string username)
         {
+            skype = new Skype();
             InitializeComponent();
             this.name = username;
             this.Text = String.Format("Send Message to {0}", name);
@@ -25,7 +26,6 @@ namespace SkypeBot.Forms
 
         private void button1_Click(object sender, EventArgs e)
         {
-            skype = new Skype();
             skype.SendMessage(name, textBox1.Text);
         }
     }

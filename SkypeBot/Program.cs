@@ -8,6 +8,7 @@ using SKYPE4COMLib;
 using SkypeBot.Handlers;
 using System.Windows.Forms;
 using System.Threading;
+using SkypeBot.Forms;
 
 namespace SkypeBot
 {
@@ -16,11 +17,11 @@ namespace SkypeBot
         private static Skype skype;
         public static List<string> _users;
         public static TUserStatus curStatus;
+        public static Thread t;
 
         static void Main(string[] args)
         {
-            
-
+            t = new Thread(() => new UserController().ShowDialog());
             _users = new List<string>();
             skype = new Skype();
 
@@ -64,7 +65,8 @@ namespace SkypeBot
 
             System.Windows.Forms.Application.EnableVisualStyles();
             System.Windows.Forms.Application.SetCompatibleTextRenderingDefault(false);
-            new Thread(() => new UserController().ShowDialog()).Start();
+            
+            t.Start();
 
             while (true) 
             {

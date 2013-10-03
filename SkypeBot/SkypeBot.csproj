@@ -86,10 +86,10 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Handlers\UserListHandler.cs" />
-    <Compile Include="UserController.cs">
+    <Compile Include="Forms\UserController.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UserController.Designer.cs">
+    <Compile Include="Forms\UserController.Designer.cs">
       <DependentUpon>UserController.cs</DependentUpon>
     </Compile>
     <Compile Include="Writer.cs" />
@@ -141,7 +141,7 @@
     <EmbeddedResource Include="Forms\SendMessage.resx">
       <DependentUpon>SendMessage.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UserController.resx">
+    <EmbeddedResource Include="Forms\UserController.resx">
       <DependentUpon>UserController.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>

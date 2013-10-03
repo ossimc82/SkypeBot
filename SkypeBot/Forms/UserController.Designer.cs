@@ -1,4 +1,4 @@
-﻿namespace SkypeBot
+﻿namespace SkypeBot.Forms
 {
     partial class UserController
     {
@@ -40,8 +40,10 @@
             this.listBox1.Location = new System.Drawing.Point(97, 12);
             this.listBox1.Name = "listBox1";
             this.listBox1.Size = new System.Drawing.Size(437, 173);
+            this.listBox1.Sorted = true;
             this.listBox1.TabIndex = 0;
             this.listBox1.DoubleClick += new System.EventHandler(this.listBox1_DoubleClick);
+            this.listBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listBox1_KeyDown);
             // 
             // listBox2
             // 
@@ -49,7 +51,9 @@
             this.listBox2.Location = new System.Drawing.Point(97, 201);
             this.listBox2.Name = "listBox2";
             this.listBox2.Size = new System.Drawing.Size(437, 173);
+            this.listBox2.Sorted = true;
             this.listBox2.TabIndex = 1;
+            this.listBox2.DoubleClick += new System.EventHandler(this.listBox2_DoubleClick);
             // 
             // label1
             // 
@@ -80,6 +84,7 @@
             this.Controls.Add(this.listBox1);
             this.Name = "UserController";
             this.Text = "Skype";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.UserController_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 
