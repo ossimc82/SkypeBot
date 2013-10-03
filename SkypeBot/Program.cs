@@ -58,7 +58,12 @@ namespace SkypeBot
                 Environment.Exit(0);
             };
 
-            while (true) { Console.Read(); }
+            while (true) 
+            {
+                string input = Console.ReadLine();
+                Writer.WriteSuccess(ConsoleCommandHandler.ProcessCommand(input));
+
+            }
         }
 
         static void skype_MessageStatus(ChatMessage msg, TChatMessageStatus status)

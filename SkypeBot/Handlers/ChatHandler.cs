@@ -9,7 +9,6 @@ namespace SkypeBot.Handlers
 {
     class ChatHandler
     {
-        static Skype skype;
         public static void HandleChat(ChatMessage msg)
         {
             try
@@ -21,7 +20,7 @@ namespace SkypeBot.Handlers
                 else
                 {
                     //Send processed message back to skype chat window
-                    msg.Chat.SendMessage(CommandHandler.ProcessCommand(msg.Body, msg));
+                    msg.Chat.SendMessage(ChatCommandHandler.ProcessCommand(msg.Body, msg));
                 }
             }
             catch (Exception ex)
@@ -34,7 +33,7 @@ namespace SkypeBot.Handlers
 
             //When the bot sends the ressult
             Writer.WriteSuccess("Send Chat: [" + DateTime.Now + "] " + "To [" + msg.Chat.Name + ", " + msg.Chat.FriendlyName + ", " + msg.Sender.Handle + "]: ");
-            Console.Write(CommandHandler.ProcessCommand(msg.Body, msg) + "\n\r");
+            Console.Write(ChatCommandHandler.ProcessCommand(msg.Body, msg) + "\n\r");
         }
     }
 }

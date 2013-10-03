@@ -69,9 +69,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConsoleCommand.cs" />
     <Compile Include="Handlers\ChatHandler.cs" />
-    <Compile Include="Handlers\CommandHandler.cs" />
-    <Compile Include="ECommand.cs" />
+    <Compile Include="Handlers\ChatCommandHandler.cs" />
+    <Compile Include="ChatCommand.cs" />
+    <Compile Include="Handlers\ConsoleCommandHandler.cs" />
     <Compile Include="Handlers\FileHandler.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

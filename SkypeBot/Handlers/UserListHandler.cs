@@ -34,7 +34,18 @@ namespace SkypeBot.Handlers
                     if (!Chats.Contains(msg.Chat.Name))
                         msg.Chat.SendMessage("Sorry but this chat is not in my ignore list, with \"!ignore\" I'll not contact this chat again.");
                     else
-                        FileHandler.Replace(msg);
+                    {
+                        try
+                        {
+                            FileHandler.Replace(msg);
+                            msg.Chat.SendMessage("Welcome, type \"!help\" to get a list of commands.");
+                        }
+                        catch (Exception ex)
+                        {
+                            msg.Chat.SendMessage("Could not unignore: " + ex.ToString());
+                        }
+
+                    }
                 }
                 using (System.IO.StreamWriter writer = new System.IO.StreamWriter(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + @"\skypelog.log", true))
                     writer.WriteLine("[" + DateTime.Now + "] " + "[" + msg.Chat.Name + ", " + msg.Chat.FriendlyName + ", " + msg.Sender.Handle + "]: " + msg.Body);

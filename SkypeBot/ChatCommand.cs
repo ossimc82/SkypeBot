@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace SkypeBot
 {
-    public enum ECommand
+    public enum ChatCommand
     {
         [StringValue("go offline!")]
         GO_OFFLINE,
