@@ -42,13 +42,8 @@ namespace SkypeBot.Forms
             if (e.KeyData == Keys.Enter)
             {
                 sendMSG = new SendMessage(this.listBox1.SelectedItem.ToString());
-                sendMSG.ShowDialog();
+                sendMSG.ShowDialog(this);
             }
-        }
-
-        private void UserController_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            Program.t.Abort();
         }
     }
 }

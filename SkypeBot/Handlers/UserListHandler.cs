@@ -21,7 +21,8 @@ namespace SkypeBot.Handlers
 
             for (int i = 0; i < ignoredChats.Length; i++)
             {
-                Chats.Add(ignoredChats[i]);
+                if(!String.IsNullOrWhiteSpace(ignoredChats[i]))
+                    Chats.Add(ignoredChats[i]);
             }
         }
 

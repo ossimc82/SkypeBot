@@ -26,7 +26,30 @@ namespace SkypeBot.Forms
 
         private void button1_Click(object sender, EventArgs e)
         {
-            skype.SendMessage(name, textBox1.Text);
+            try
+            {
+                skype.SendMessage(name, textBox1.Text);
+                Writer.WriteSuccessln(String.Format("[{0}] Manual sendchat to \"{0}\": {2}", DateTime.Now, name, textBox1.Text));
+            }
+            catch (Exception ex)
+            {
+                Writer.WriteErrorln(ex.ToString());
+                MessageBox.Show(String.Format("Please report it on github http://github.com/ossimc82/SkypeBot: \n\n{0}", ex.ToString()), ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            if(String.IsNullOrWhiteSpace(textBox1.Text))
+            {
+                textBox1.BackColor = Color.Red;
+                button1.Enabled = false;
+            }
+            else
+            {
+                textBox1.BackColor = Color.Lime;
+                button1.Enabled = true;
+            }
         }
     }
 }

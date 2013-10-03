@@ -11,6 +11,8 @@ namespace SkypeBot
         [StringValue("help")]
         HELP,
         [StringValue("clear")]
-        CLEAR
+        CLEAR,
+        [StringValue("visual")]
+        SHOW_FORM
     }
 }

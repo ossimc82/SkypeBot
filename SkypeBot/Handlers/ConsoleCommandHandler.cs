@@ -33,6 +33,13 @@ namespace SkypeBot.Handlers
                 }
                 #endregion
 
+                #region SHOW_FORM
+                else if (command.Equals(StringEnum.GetStringValue(ConsoleCommand.SHOW_FORM), StringComparison.InvariantCultureIgnoreCase))
+                {
+                    new Forms.UserController().ShowDialog();
+                }
+                #endregion
+
                 else
                 {
                     Writer.WriteErrorln("Unknown command, type \"help\" to get a list of all commands");

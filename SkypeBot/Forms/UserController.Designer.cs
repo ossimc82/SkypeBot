@@ -84,7 +84,6 @@
             this.Controls.Add(this.listBox1);
             this.Name = "UserController";
             this.Text = "Skype";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.UserController_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 
