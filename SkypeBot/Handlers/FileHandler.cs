@@ -22,10 +22,9 @@ namespace SkypeBot.Handlers
 
         public static void Write(ChatMessage message)
         {
-            using (System.IO.StreamWriter writer = new System.IO.StreamWriter(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredChats", true))
-            {
-                writer.Write(message.Chat.Name + ",");
-            }
+            TextWriter tw = new StreamWriter(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredChats", true);
+            tw.Write(message.Chat.Name + ",");
+            tw.Close();
             UserListHandler.LoadIgnoreList();
         }
 

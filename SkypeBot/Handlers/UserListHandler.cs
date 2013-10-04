@@ -21,14 +21,14 @@ namespace SkypeBot.Handlers
 
             for (int i = 0; i < ignoredChats.Length; i++)
             {
-                if(!String.IsNullOrWhiteSpace(ignoredChats[i]))
+                if (!String.IsNullOrWhiteSpace(ignoredChats[i]))
                     Chats.Add(ignoredChats[i]);
             }
         }
 
         public static bool IsChatIgnored(ChatMessage msg)
         {
-            if(Chats.Contains(msg.Chat.Name))
+            if (Chats.Contains(msg.Chat.Name))
             {
                 if (msg.Body.Equals("!unignore", StringComparison.InvariantCultureIgnoreCase))
                 {
@@ -72,6 +72,24 @@ namespace SkypeBot.Handlers
                         Program._users.Add(skype.HardwiredGroups[i + 1].Users[j].Handle);
                     } break;
                 }
+            }
+        }
+
+        public static void UpdateOnlineStatus(User pUser, User currentUser, TOnlineStatus Status)
+        {
+            if (currentUser.Handle.Equals(pUser.Handle))
+            {
+                if (Status == TOnlineStatus.olsOnline)
+                    Forms.UserController.pictureBox1.Image = global::SkypeBot.Properties.Resources.skype_Online;
+                else if (Status == TOnlineStatus.olsAway)
+                    Forms.UserController.pictureBox1.Image = global::SkypeBot.Properties.Resources.skype_Away;
+                else if (Status == TOnlineStatus.olsDoNotDisturb)
+                    Forms.UserController.pictureBox1.Image = global::SkypeBot.Properties.Resources.skype_DND;
+                else if (Status == TOnlineStatus.olsUnknown)
+                    Forms.UserController.pictureBox1.Image = global::SkypeBot.Properties.Resources.skype_Invisible;
+                else if (Status == TOnlineStatus.olsOffline)
+                    Forms.UserController.pictureBox1.Image = global::SkypeBot.Properties.Resources.skype_Offline;
+                else { Writer.WriteWarningln("Unknown onlinestatus: " + Status.ToString()); }
             }
         }
     }

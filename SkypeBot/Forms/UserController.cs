@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using SkypeBot.Handlers;
 using SKYPE4COMLib;
-using SkypeBot.Forms;
+using SkypeBot.Forms.Subforms;
 
 namespace SkypeBot.Forms
 {
@@ -24,6 +24,18 @@ namespace SkypeBot.Forms
             InitializeComponent();
             listBox1.DataSource = Program._users;
             listBox2.DataSource = UserListHandler.Chats;
+
+            if (skype.CurrentUser.OnlineStatus == TOnlineStatus.olsOnline)
+                Forms.UserController.pictureBox1.Image = global::SkypeBot.Properties.Resources.skype_Online;
+            else if (skype.CurrentUser.OnlineStatus == TOnlineStatus.olsAway)
+                Forms.UserController.pictureBox1.Image = global::SkypeBot.Properties.Resources.skype_Away;
+            else if (skype.CurrentUser.OnlineStatus == TOnlineStatus.olsDoNotDisturb)
+                Forms.UserController.pictureBox1.Image = global::SkypeBot.Properties.Resources.skype_DND;
+            else if (skype.CurrentUser.OnlineStatus == TOnlineStatus.olsUnknown)
+                Forms.UserController.pictureBox1.Image = global::SkypeBot.Properties.Resources.skype_Invisible;
+            else if (skype.CurrentUser.OnlineStatus == TOnlineStatus.olsOffline)
+                Forms.UserController.pictureBox1.Image = global::SkypeBot.Properties.Resources.skype_Offline;
+            else { Writer.WriteWarningln("Unknown onlinestatus: " + skype.CurrentUser.OnlineStatus.ToString()); }
         }
 
         private void listBox1_DoubleClick(object sender, EventArgs e)
@@ -34,7 +46,7 @@ namespace SkypeBot.Forms
 
         private void listBox2_DoubleClick(object sender, EventArgs e)
         {
-
+            
         }
 
         private void listBox1_KeyDown(object sender, KeyEventArgs e)
@@ -44,11 +56,6 @@ namespace SkypeBot.Forms
                 sendMSG = new SendMessage(this.listBox1.SelectedItem.ToString());
                 sendMSG.ShowDialog(this);
             }
-        }
-
-        private void UserController_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            Program.t.Abort();
         }
     }
 }

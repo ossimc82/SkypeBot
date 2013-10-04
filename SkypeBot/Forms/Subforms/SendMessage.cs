@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using SKYPE4COMLib;
 
-namespace SkypeBot.Forms
+namespace SkypeBot.Forms.Subforms
 {
     public partial class SendMessage : Form
     {

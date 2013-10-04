@@ -24,6 +24,9 @@ namespace SkypeBot
             t = new Thread(() => new UserController().ShowDialog());
             _users = new List<string>();
             skype = new Skype();
+            System.Windows.Forms.Application.EnableVisualStyles();
+            System.Windows.Forms.Application.SetCompatibleTextRenderingDefault(false);
+
             Writer.WriteSuccessln("[" + DateTime.Now + "] Loading...");
             if (!skype.Client.IsRunning)
             {
@@ -51,6 +54,7 @@ namespace SkypeBot
                 //Listen
                 Writer.WriteWarningln("[" + DateTime.Now + "] Starting Messagelistener...");
                 skype.MessageStatus += new _ISkypeEvents_MessageStatusEventHandler(skype_MessageStatus);
+                skype.OnlineStatus += new _ISkypeEvents_OnlineStatusEventHandler(skype_OnlineStatus);
                 curStatus = skype.CurrentUserStatus;
                 Writer.WriteSuccessln("[" + DateTime.Now + "] Messagelistener Started...");
             }
@@ -73,8 +77,7 @@ namespace SkypeBot
                 Environment.Exit(0);
             };
 
-            System.Windows.Forms.Application.EnableVisualStyles();
-            System.Windows.Forms.Application.SetCompatibleTextRenderingDefault(false);
+            
             t.Start();
 
             while (true) 
@@ -83,6 +86,11 @@ namespace SkypeBot
                 Writer.WriteSuccess(ConsoleCommandHandler.ProcessCommand(input));
 
             }
+        }
+
+        static void skype_OnlineStatus(User pUser, TOnlineStatus Status)
+        {
+            UserListHandler.UpdateOnlineStatus(pUser, skype.CurrentUser, Status);
         }
 
         static void skype_MessageStatus(ChatMessage msg, TChatMessageStatus status)

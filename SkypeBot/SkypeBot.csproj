@@ -47,7 +47,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Skype.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\Skype.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Testing|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -72,10 +72,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsoleCommand.cs" />
-    <Compile Include="Forms\SendMessage.cs">
+    <Compile Include="Forms\Subforms\SendMessage.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\SendMessage.Designer.cs">
+    <Compile Include="Forms\Subforms\SendMessage.Designer.cs">
       <DependentUpon>SendMessage.cs</DependentUpon>
     </Compile>
     <Compile Include="Handlers\ChatHandler.cs" />
@@ -91,6 +91,11 @@
     </Compile>
     <Compile Include="Forms\UserController.Designer.cs">
       <DependentUpon>UserController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Writer.cs" />
   </ItemGroup>
@@ -118,7 +123,10 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Skype.ico" />
+    <None Include="Resources\skype_Online.ico" />
+    <None Include="Resources\skype_Invisible.ico" />
+    <None Include="Resources\skype_DND.ico" />
+    <None Include="Resources\skype_Away.ico" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">
@@ -138,12 +146,25 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Forms\SendMessage.resx">
+    <EmbeddedResource Include="Forms\Subforms\SendMessage.resx">
       <DependentUpon>SendMessage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\UserController.resx">
       <DependentUpon>UserController.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\skype_Black.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\skype_Offline.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Skype.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
