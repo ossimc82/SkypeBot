@@ -62,6 +62,7 @@ namespace SkypeBot
                 Writer.WriteSuccessln("[" + DateTime.Now + "] Loaded " + _users.Count + " contacts...");
 
                 Writer.WriteWarningln("[" + DateTime.Now + "] Loading Recent GroupChats...");
+                Writer.WriteErrorln("[" + DateTime.Now + "] this *CAN* take up to 5 minutes...");
                 UserListHandler.GetGroupChats();
                 Writer.WriteSuccessln("[" + DateTime.Now + "] Recent GroupChats Loaded...");
 
@@ -88,7 +89,6 @@ namespace SkypeBot
 
             Console.CancelKeyPress += (sender, e) =>
             {
-                Writer.WriteWarningln("Closing " + System.Diagnostics.Process.GetCurrentProcess().Threads.Count + " Threads");
                 Console.ForegroundColor = ConsoleColor.DarkMagenta;
                 Console.WriteLine("Terminating...");
                 System.Threading.Thread.Sleep(100);

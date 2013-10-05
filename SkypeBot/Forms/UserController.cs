@@ -43,16 +43,18 @@ namespace SkypeBot.Forms
         private void listBox1_DoubleClick(object sender, EventArgs e)
         {
             string SkypeName = FindSkypeName(this.listBox1.SelectedItem.ToString());
+            string DisplayName = this.listBox1.SelectedItem.ToString();
 
             if (SkypeName != "not found")
-                new Thread(() => new SendMessage(SkypeName, listBox1.SelectedItem.ToString()).ShowDialog()).Start();
+                new Thread(() => new SendMessage(SkypeName, DisplayName).ShowDialog()).Start();
             else
                 MessageBox.Show(String.Format("Couldnt find the skypename of {0}", listBox1.SelectedItem.ToString()), "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
         }
 
         private void listBox2_DoubleClick(object sender, EventArgs e)
         {
-
+            string id = listBox2.SelectedItem.ToString();
+            new Thread(() => new IgnoredChatsHandleForm(id).ShowDialog()).Start();
         }
 
         private void listBox1_KeyDown(object sender, KeyEventArgs e)
@@ -60,9 +62,11 @@ namespace SkypeBot.Forms
             if (e.KeyData == Keys.Enter)
             {
                 string SkypeName = FindSkypeName(this.listBox1.SelectedItem.ToString());
+                string DisplayName = this.listBox1.SelectedItem.ToString();
+
                 if (SkypeName != "not found")
                 {
-                    new Thread(() => new SendMessage(SkypeName, listBox1.SelectedItem.ToString()).ShowDialog()).Start();
+                    new Thread(() => new SendMessage(SkypeName, DisplayName).ShowDialog()).Start();
                 }
                 else
                 {
@@ -108,6 +112,23 @@ namespace SkypeBot.Forms
             {
                 new Thread(() => new SendMessage(i.SubItems[1].Text, i.SubItems[0].Text).ShowDialog()).Start();
             }
+        }
+
+        private void listBox2_KeyDown(object sender, KeyEventArgs e)
+        {
+            string id = listBox2.SelectedItem.ToString();
+
+            if (e.KeyCode == Keys.Enter)
+                new Thread(() => new IgnoredChatsHandleForm(id).ShowDialog()).Start();
+            else { }
+        }
+
+        public void RefreshContent()
+        {
+            listBox1.ClearSelected();
+            listBox2.ClearSelected();
+            listBox1.DataSource = Program._users;
+            listBox2.DataSource = UserListHandler.Chats;
         }
     }
 }

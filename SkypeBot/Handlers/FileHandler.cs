@@ -33,5 +33,11 @@ namespace SkypeBot.Handlers
             File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredChats", File.ReadAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredChats").Replace(message.Chat.Name + ",", String.Empty));
             UserListHandler.LoadIgnoreList();
         }
+
+        public static void Replace(string chatID)
+        {
+            File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredChats", File.ReadAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SkypeBot\IgnoredChats").Replace(chatID + ",", String.Empty));
+            UserListHandler.LoadIgnoreList();
+        }
     }
 }

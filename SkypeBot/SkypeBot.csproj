@@ -78,6 +78,12 @@
     <Compile Include="Forms\Subforms\ChangeOnlineStatus.Designer.cs">
       <DependentUpon>ChangeOnlineStatus.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Subforms\IgnoredChatsHandleForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Subforms\IgnoredChatsHandleForm.Designer.cs">
+      <DependentUpon>IgnoredChatsHandleForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Subforms\SendMessage.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -155,6 +161,9 @@
     <EmbeddedResource Include="Forms\Subforms\ChangeOnlineStatus.resx">
       <DependentUpon>ChangeOnlineStatus.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Subforms\IgnoredChatsHandleForm.resx">
+      <DependentUpon>IgnoredChatsHandleForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Subforms\SendMessage.resx">
       <DependentUpon>SendMessage.cs</DependentUpon>
     </EmbeddedResource>
@@ -174,6 +183,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Skype.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\del.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -71,6 +71,7 @@
             this.listBox2.Sorted = true;
             this.listBox2.TabIndex = 1;
             this.listBox2.DoubleClick += new System.EventHandler(this.listBox2_DoubleClick);
+            this.listBox2.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listBox2_KeyDown);
             // 
             // tabControl1
             // 
