@@ -35,7 +35,7 @@ namespace SkypeBot
             if (!skype.Client.IsRunning)
             {
                 skype.Client.Start(true, true);
-                Writer.WriteErrorln("[" + DateTime.Now + "] SkypeClient not running, the programm will start it now.");
+                Writer.WriteErrorln("[" + DateTime.Now + "] SkypeClient not running, the programm will start it now...");
                 System.Threading.Thread.Sleep(12000);
                 while (skype.CurrentUserStatus == TUserStatus.cusLoggedOut) { System.Threading.Thread.Sleep(5000); Writer.WriteErrorln("Not logged in... Retrying"); }
             }
@@ -61,7 +61,7 @@ namespace SkypeBot
                 }
                   
 
-                Writer.WriteSuccessln("[" + DateTime.Now + "] Loaded " + _users.Count + " contacts.");
+                Writer.WriteSuccessln("[" + DateTime.Now + "] Loaded " + _users.Count + " contacts...");
                 Writer.WriteWarningln("[" + DateTime.Now + "] Loading Ignorelist...");
                 UserListHandler.LoadIgnoreList();
                 Writer.WriteSuccessln("[" + DateTime.Now + "] Ignorelist Loaded...");
@@ -70,7 +70,7 @@ namespace SkypeBot
                 skype.MessageStatus += new _ISkypeEvents_MessageStatusEventHandler(skype_MessageStatus);
                 skype.OnlineStatus += new _ISkypeEvents_OnlineStatusEventHandler(skype_OnlineStatus);
                 curStatus = skype.CurrentUserStatus;
-                Writer.WriteSuccessln("[" + DateTime.Now + "] Me ssagelistener Started...");
+                Writer.WriteSuccessln("[" + DateTime.Now + "] Messagelistener Started...");
             }
             catch
             {
@@ -98,7 +98,6 @@ namespace SkypeBot
             {
                 string input = Console.ReadLine();
                 Writer.WriteSuccess(ConsoleCommandHandler.ProcessCommand(input));
-
             }
         }
 
@@ -116,18 +115,6 @@ namespace SkypeBot
                     ChatHandler.HandleChat(msg);
                 }
             }
-            //if (status == TChatMessageStatus.cmsSending)
-            //{
-            //    if (msg.Body.StartsWith("!say "))
-            //    {
-            //        msg.Chat.SendMessage(msg.Body.Replace("!say ", String.Empty));
-            //    }
-            //    else
-            //    {
-            //        //Send processed message back to skype chat window
-            //        msg.Chat.SendMessage(CommandProcessor.ProcessCommand(msg.Body, msg));
-            //    }
-            //}
         }
     }
 }

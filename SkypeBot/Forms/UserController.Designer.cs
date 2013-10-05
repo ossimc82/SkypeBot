@@ -78,6 +78,7 @@
             // 
             // pictureBox1
             // 
+            pictureBox1.Cursor = System.Windows.Forms.Cursors.Hand;
             pictureBox1.Image = global::SkypeBot.Properties.Resources.skype_Offline;
             pictureBox1.Location = new System.Drawing.Point(12, 12);
             pictureBox1.Name = "pictureBox1";
@@ -85,6 +86,9 @@
             pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             pictureBox1.TabIndex = 4;
             pictureBox1.TabStop = false;
+            pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
+            pictureBox1.MouseLeave += new System.EventHandler(this.pictureBox1_MouseLeave);
+            pictureBox1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseMove);
             // 
             // UserController
             // 

@@ -10,13 +10,13 @@ using System.Windows.Forms;
 using SkypeBot.Handlers;
 using SKYPE4COMLib;
 using SkypeBot.Forms.Subforms;
+using System.Threading;
 
 namespace SkypeBot.Forms
 {
     public partial class UserController : Form
     {
         private Skype skype;
-        private SendMessage sendMSG;
 
         public UserController()
         {
@@ -25,17 +25,7 @@ namespace SkypeBot.Forms
             listBox1.DataSource = Program._users;
             listBox2.DataSource = UserListHandler.Chats;
 
-            if (skype.CurrentUser.OnlineStatus == TOnlineStatus.olsOnline)
-                Forms.UserController.pictureBox1.Image = global::SkypeBot.Properties.Resources.skype_Online;
-            else if (skype.CurrentUser.OnlineStatus == TOnlineStatus.olsAway)
-                Forms.UserController.pictureBox1.Image = global::SkypeBot.Properties.Resources.skype_Away;
-            else if (skype.CurrentUser.OnlineStatus == TOnlineStatus.olsDoNotDisturb)
-                Forms.UserController.pictureBox1.Image = global::SkypeBot.Properties.Resources.skype_DND;
-            else if (skype.CurrentUser.OnlineStatus == TOnlineStatus.olsUnknown)
-                Forms.UserController.pictureBox1.Image = global::SkypeBot.Properties.Resources.skype_Invisible;
-            else if (skype.CurrentUser.OnlineStatus == TOnlineStatus.olsOffline)
-                Forms.UserController.pictureBox1.Image = global::SkypeBot.Properties.Resources.skype_Offline;
-            else { Writer.WriteWarningln("Unknown onlinestatus: " + skype.CurrentUser.OnlineStatus.ToString()); }
+            UserListHandler.UpdateOnlineStatus(skype.CurrentUser, skype.CurrentUser, skype.CurrentUser.OnlineStatus);
         }
 
         private void listBox1_DoubleClick(object sender, EventArgs e)
@@ -43,8 +33,7 @@ namespace SkypeBot.Forms
             string SkypeName = FindSkypeName(this.listBox1.SelectedItem.ToString());
                 if (SkypeName != "not found")
                 {
-                    sendMSG = new SendMessage(SkypeName);
-                    sendMSG.ShowDialog(this);
+                    new Thread(() => new SendMessage(SkypeName).ShowDialog()).Start();
                 }
                 else 
                 {
@@ -65,8 +54,7 @@ namespace SkypeBot.Forms
                 string SkypeName = FindSkypeName(this.listBox1.SelectedItem.ToString());
                 if (SkypeName != "not found")
                 {
-                    sendMSG = new SendMessage(SkypeName);
-                    sendMSG.ShowDialog(this);
+                    new Thread(() => new SendMessage(SkypeName).ShowDialog()).Start();
                 }
                 else 
                 {
@@ -75,7 +63,8 @@ namespace SkypeBot.Forms
                 }
             }
         }
-        string FindSkypeName(string FullName)
+
+        private string FindSkypeName(string FullName)
         {
             for (int i = 0; i < Program.UsersArray.Length / 2; i++)
             {
@@ -83,6 +72,21 @@ namespace SkypeBot.Forms
                     return Program.UsersArray[i,1];
             }
             return "not found";
-        }            
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+            new Thread(() => new ChangeOnlineStatus().ShowDialog()).Start();
+        }
+
+        private void pictureBox1_MouseLeave(object sender, EventArgs e)
+        {
+            pictureBox1.BackColor = DefaultBackColor;
+        }
+
+        private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
+        {
+            pictureBox1.BackColor = Color.Gray;
+        }
     }
 }
