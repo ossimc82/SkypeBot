@@ -22,29 +22,31 @@ namespace SkypeBot.Forms
         {
             skype = new Skype();
             InitializeComponent();
+            LoadStaticPictureBox();
+            this.skypeName.Text = String.Format("Currently logged in as: {0}", skype.CurrentUser.FullName);
             listBox1.DataSource = Program._users;
             listBox2.DataSource = UserListHandler.Chats;
 
-            UserListHandler.UpdateOnlineStatus(skype.CurrentUser, skype.CurrentUser, skype.CurrentUser.OnlineStatus);
+            UserListHandler.UpdateOnlineStatus(skype.CurrentUser, skype.CurrentUser, skype.CurrentUser.OnlineStatus, pictureBox1);
         }
 
         private void listBox1_DoubleClick(object sender, EventArgs e)
         {
             string SkypeName = FindSkypeName(this.listBox1.SelectedItem.ToString());
-                if (SkypeName != "not found")
-                {
-                    new Thread(() => new SendMessage(SkypeName).ShowDialog()).Start();
-                }
-                else 
-                {
-                    string ErrorMsg = string.Format("Couldnt find the skypename of {0}", listBox1.SelectedItem.ToString());
-                    MessageBox.Show(ErrorMsg, "Fatal Error",MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                }
+            if (SkypeName != "not found")
+            {
+                new Thread(() => new SendMessage(SkypeName).ShowDialog()).Start();
+            }
+            else
+            {
+                string ErrorMsg = string.Format("Couldnt find the skypename of {0}", listBox1.SelectedItem.ToString());
+                MessageBox.Show(ErrorMsg, "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+            }
         }
 
         private void listBox2_DoubleClick(object sender, EventArgs e)
         {
-            
+
         }
 
         private void listBox1_KeyDown(object sender, KeyEventArgs e)
@@ -56,10 +58,10 @@ namespace SkypeBot.Forms
                 {
                     new Thread(() => new SendMessage(SkypeName).ShowDialog()).Start();
                 }
-                else 
+                else
                 {
                     string ErrorMsg = string.Format("Couldnt find the skypename of {0}", listBox1.SelectedItem.ToString());
-                    MessageBox.Show(ErrorMsg, "Fatal Error",MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    MessageBox.Show(ErrorMsg, "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 }
             }
         }
@@ -68,8 +70,8 @@ namespace SkypeBot.Forms
         {
             for (int i = 0; i < Program.UsersArray.Length / 2; i++)
             {
-                if (Program.UsersArray[i,0] ==FullName)
-                    return Program.UsersArray[i,1];
+                if (Program.UsersArray[i, 0] == FullName)
+                    return Program.UsersArray[i, 1];
             }
             return "not found";
         }
@@ -81,12 +83,17 @@ namespace SkypeBot.Forms
 
         private void pictureBox1_MouseLeave(object sender, EventArgs e)
         {
-            pictureBox1.BackColor = DefaultBackColor;
+            pictureBox1.BackColor = Color.White;
         }
 
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
         {
             pictureBox1.BackColor = Color.Gray;
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/ossimc82/SkypeBot");
         }
     }
 }

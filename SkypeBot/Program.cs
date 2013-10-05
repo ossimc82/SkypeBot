@@ -39,9 +39,11 @@ namespace SkypeBot
                 System.Threading.Thread.Sleep(12000);
                 while (skype.CurrentUserStatus == TUserStatus.cusLoggedOut) { System.Threading.Thread.Sleep(5000); Writer.WriteErrorln("Not logged in... Retrying"); }
             }
+
             Writer.WriteWarningln("[" + DateTime.Now + "] Checking Files...");
             FileHandler.CheckFiles();
             Writer.WriteSuccessln("[" + DateTime.Now + "] Filecheck Finished...");
+
             Initialize:
             try
             {
@@ -49,22 +51,39 @@ namespace SkypeBot
                 //Loads events
                 skype.Attach();
                 Writer.WriteSuccessln("[" + DateTime.Now + "] Connected...");
+
                 Writer.WriteWarningln("[" + DateTime.Now + "] Loading Contacts...");
                 UserListHandler.GetContacts();
-
                 UsersArray = new string[_users.Count,2];
-
                 for (int i = 0; i < UsersArray.Length/2; i++)
                 {
                     UsersArray[i, 0] = _users[i];         //ShowedName
                     UsersArray[i, 1] = _usernames[i];     //skypename
                 }
-                  
-
                 Writer.WriteSuccessln("[" + DateTime.Now + "] Loaded " + _users.Count + " contacts...");
+
+                //Writer.WriteWarningln("[" + DateTime.Now + "] Loading Recent GroupChats...");
+                //List<string> Chats = new List<string>();
+                //foreach (Chat c in skype.Chats)
+                //{
+                //    if (c.ActivityTimestamp > DateTime.Now.AddDays(-2))
+                //    {
+                //        try
+                //        {
+                //            //Console.WriteLine(DateTime.Now.ToShortDateString());
+                //            Chats.Add(c.Name);
+                //            Console.WriteLine(c.FriendlyName);
+                //        }
+                //        catch (Exception) { }
+                //    }
+                //    else { }
+                //}
+                //Writer.WriteSuccessln("[" + DateTime.Now + "] Recent GroupChats Loaded...");
+
                 Writer.WriteWarningln("[" + DateTime.Now + "] Loading Ignorelist...");
                 UserListHandler.LoadIgnoreList();
                 Writer.WriteSuccessln("[" + DateTime.Now + "] Ignorelist Loaded...");
+
                 //Listen
                 Writer.WriteWarningln("[" + DateTime.Now + "] Starting Messagelistener...");
                 skype.MessageStatus += new _ISkypeEvents_MessageStatusEventHandler(skype_MessageStatus);
@@ -90,7 +109,6 @@ namespace SkypeBot
                 t.Abort();
                 Environment.Exit(0);
             };
-
             
             t.Start();
 
@@ -103,7 +121,7 @@ namespace SkypeBot
 
         static void skype_OnlineStatus(User pUser, TOnlineStatus Status)
         {
-            UserListHandler.UpdateOnlineStatus(pUser, skype.CurrentUser, Status);
+            UserListHandler.UpdateOnlineStatus(pUser, skype.CurrentUser, Status, UserController.pictureBox1);
         }
 
         static void skype_MessageStatus(ChatMessage msg, TChatMessageStatus status)
