@@ -40,8 +40,17 @@ namespace SkypeBot.Forms
 
         private void listBox1_DoubleClick(object sender, EventArgs e)
         {
-            sendMSG = new SendMessage(this.listBox1.SelectedItem.ToString());
-            sendMSG.ShowDialog();
+            string SkypeName = FindSkypeName(this.listBox1.SelectedItem.ToString());
+                if (SkypeName != "not found")
+                {
+                    sendMSG = new SendMessage(SkypeName);
+                    sendMSG.ShowDialog(this);
+                }
+                else 
+                {
+                    string ErrorMsg = string.Format("Couldnt find the skypename of {0}", listBox1.SelectedItem.ToString());
+                    MessageBox.Show(ErrorMsg, "Fatal Error",MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                }
         }
 
         private void listBox2_DoubleClick(object sender, EventArgs e)
@@ -53,9 +62,27 @@ namespace SkypeBot.Forms
         {
             if (e.KeyData == Keys.Enter)
             {
-                sendMSG = new SendMessage(this.listBox1.SelectedItem.ToString());
-                sendMSG.ShowDialog(this);
+                string SkypeName = FindSkypeName(this.listBox1.SelectedItem.ToString());
+                if (SkypeName != "not found")
+                {
+                    sendMSG = new SendMessage(SkypeName);
+                    sendMSG.ShowDialog(this);
+                }
+                else 
+                {
+                    string ErrorMsg = string.Format("Couldnt find the skypename of {0}", listBox1.SelectedItem.ToString());
+                    MessageBox.Show(ErrorMsg, "Fatal Error",MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                }
             }
         }
+        string FindSkypeName(string FullName)
+        {
+            for (int i = 0; i < Program.Test.Length / 2; i++)
+            {
+                if (Program.Test[i,0] ==FullName)
+                    return Program.Test[i,1];
+            }
+            return "not found";
+        }            
     }
 }

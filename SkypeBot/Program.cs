@@ -15,14 +15,18 @@ namespace SkypeBot
     class Program
     {
         private static Skype skype;
-        public static List<string> _users;
+        public static List<string> _users;          //Showed name in the skype
+        public static List<string> _usernames;      //skypename
+        public static string[,] Test;
         public static TUserStatus curStatus;
         public static Thread t;
 
         static void Main(string[] args)
         {
             t = new Thread(() => new UserController().ShowDialog());
+            
             _users = new List<string>();
+            _usernames = new List<string>();
             skype = new Skype();
             System.Windows.Forms.Application.EnableVisualStyles();
             System.Windows.Forms.Application.SetCompatibleTextRenderingDefault(false);
@@ -47,6 +51,16 @@ namespace SkypeBot
                 Writer.WriteSuccessln("[" + DateTime.Now + "] Connected...");
                 Writer.WriteWarningln("[" + DateTime.Now + "] Loading Contacts...");
                 UserListHandler.GetContacts();
+
+                Test = new string[_users.Count,2];
+
+                for (int i = 0; i < Test.Length/2; i++)
+                {
+                    Test[i, 0] = _users[i];         //ShowedName
+                    Test[i, 1] = _usernames[i];     //skypename
+                }
+                  
+
                 Writer.WriteSuccessln("[" + DateTime.Now + "] Loaded " + _users.Count + " contacts.");
                 Writer.WriteWarningln("[" + DateTime.Now + "] Loading Ignorelist...");
                 UserListHandler.LoadIgnoreList();
@@ -56,7 +70,7 @@ namespace SkypeBot
                 skype.MessageStatus += new _ISkypeEvents_MessageStatusEventHandler(skype_MessageStatus);
                 skype.OnlineStatus += new _ISkypeEvents_OnlineStatusEventHandler(skype_OnlineStatus);
                 curStatus = skype.CurrentUserStatus;
-                Writer.WriteSuccessln("[" + DateTime.Now + "] Messagelistener Started...");
+                Writer.WriteSuccessln("[" + DateTime.Now + "] Me ssagelistener Started...");
             }
             catch
             {

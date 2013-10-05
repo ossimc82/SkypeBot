@@ -69,10 +69,15 @@ namespace SkypeBot.Handlers
                 {
                     for (int j = skype.HardwiredGroups[i + 1].Users.Count; j > 0; j--)
                     {
-                        Program._users.Add(skype.HardwiredGroups[i + 1].Users[j].Handle);
+                        Program._usernames.Add(skype.HardwiredGroups[i + 1].Users[j].Handle);
+                        if (skype.HardwiredGroups[i + 1].Users[j].FullName != "")
+                            Program._users.Add(skype.HardwiredGroups[i + 1].Users[j].FullName);
+                        else
+                            Program._users.Add(skype.HardwiredGroups[i + 1].Users[j].Handle);
                     } break;
                 }
             }
+
         }
 
         public static void UpdateOnlineStatus(User pUser, User currentUser, TOnlineStatus Status)
