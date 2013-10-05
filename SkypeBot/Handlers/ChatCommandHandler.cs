@@ -7,6 +7,7 @@ using System.Reflection;
 using System.IO;
 using SKYPE4COMLib;
 using WMPLib;
+using SkypeBot.Forms;
 
 namespace SkypeBot.Handlers
 {
@@ -14,10 +15,12 @@ namespace SkypeBot.Handlers
     {
         private static WindowsMediaPlayer mediaPlayer = new WindowsMediaPlayer();
         private static Skype skype = new Skype();
+        private static UserController usrc;
         private static string[] permitedUsers;
 
         public static string ProcessCommand(string str, ChatMessage message)
         {
+            usrc = new Forms.UserController();
             string result = String.Empty;
 
             //Here are the the words that the bot understands.
@@ -160,6 +163,7 @@ namespace SkypeBot.Handlers
             {
                 FileHandler.Write(message);
                 result = "This chat (" + message.Chat.FriendlyName + "(" + message.Chat.Name + ")) dont get messages from me now, you can enable me with \"!unignore\".";
+                usrc.listBox2.Refresh();
             }
             #endregion
 

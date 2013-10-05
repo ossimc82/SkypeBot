@@ -6,11 +6,13 @@ using System.Threading.Tasks;
 using SKYPE4COMLib;
 using System.IO;
 using System.Windows.Forms;
+using SkypeBot.Forms;
 
 namespace SkypeBot.Handlers
 {
     public static class UserListHandler
     {
+        private static UserController usrc;
         public static List<string> Chats;
         private static string[] ignoredChats;
         static Skype skype;
@@ -29,6 +31,8 @@ namespace SkypeBot.Handlers
 
         public static bool IsChatIgnored(ChatMessage msg)
         {
+            usrc = new UserController();
+
             if (Chats.Contains(msg.Chat.Name))
             {
                 if (msg.Body.Equals("!unignore", StringComparison.InvariantCultureIgnoreCase))
@@ -41,6 +45,7 @@ namespace SkypeBot.Handlers
                         {
                             FileHandler.Replace(msg);
                             msg.Chat.SendMessage("Welcome, type \"!help\" to get a list of commands.");
+                            usrc.listBox2.Refresh();
                         }
                         catch (Exception ex)
                         {
@@ -60,7 +65,6 @@ namespace SkypeBot.Handlers
             return false;
         }
 
-        //useless at the moment, I will find a use for it when i finished my socket-file-transferer
         public static void GetContacts()
         {
             skype = new Skype();
