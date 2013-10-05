@@ -10,7 +10,7 @@ using SkypeBot.Forms;
 
 namespace SkypeBot.Handlers
 {
-    public static class UserListHandler
+    public class UserListHandler
     {
         private static UserController usrc;
         public static List<string> Chats;
@@ -100,6 +100,22 @@ namespace SkypeBot.Handlers
                 else if (Status == TOnlineStatus.olsOffline)
                     pictureBox.Image = global::SkypeBot.Properties.Resources.skype_Offline;
                 else { Writer.WriteWarningln("Unknown onlinestatus: " + Status.ToString()); pictureBox.Image = global::SkypeBot.Properties.Resources.skype_Black; }
+            }
+        }
+
+        public static void GetGroupChats()
+        {
+            Program._FriendlyName = new List<string>();
+            Program._Name = new List<string>();
+
+            foreach (Chat c in skype.Chats)
+            {
+                if (c.ActivityTimestamp > DateTime.Now.AddDays(-2))
+                {
+                    Program._FriendlyName.Add(c.FriendlyName);
+                    Program._Name.Add(c.Name);
+                }
+                else { }
             }
         }
     }

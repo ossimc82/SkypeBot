@@ -39,7 +39,9 @@
             this.contatcsPage = new System.Windows.Forms.TabPage();
             this.ignorePage = new System.Windows.Forms.TabPage();
             this.groupChatPage = new System.Windows.Forms.TabPage();
-            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.listView1 = new System.Windows.Forms.ListView();
+            this.chat_name = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chat_id = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tabControl1.SuspendLayout();
             this.skypePage.SuspendLayout();
             this.contatcsPage.SuspendLayout();
@@ -147,7 +149,7 @@
             // 
             // groupChatPage
             // 
-            this.groupChatPage.Controls.Add(this.linkLabel1);
+            this.groupChatPage.Controls.Add(this.listView1);
             this.groupChatPage.Location = new System.Drawing.Point(4, 22);
             this.groupChatPage.Name = "groupChatPage";
             this.groupChatPage.Size = new System.Drawing.Size(476, 386);
@@ -155,19 +157,30 @@
             this.groupChatPage.Text = "Group Chats";
             this.groupChatPage.UseVisualStyleBackColor = true;
             // 
-            // linkLabel1
+            // listView1
             // 
-            this.linkLabel1.AutoSize = true;
-            this.linkLabel1.LinkArea = new System.Windows.Forms.LinkArea(20, 6);
-            this.linkLabel1.LinkBehavior = System.Windows.Forms.LinkBehavior.AlwaysUnderline;
-            this.linkLabel1.Location = new System.Drawing.Point(130, 185);
-            this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(216, 17);
-            this.linkLabel1.TabIndex = 0;
-            this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "Comming soon, check GitHub for Updates";
-            this.linkLabel1.UseCompatibleTextRendering = true;
-            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.chat_name,
+            this.chat_id});
+            this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listView1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.listView1.Location = new System.Drawing.Point(0, 0);
+            this.listView1.Name = "listView1";
+            this.listView1.Size = new System.Drawing.Size(476, 386);
+            this.listView1.TabIndex = 0;
+            this.listView1.UseCompatibleStateImageBehavior = false;
+            this.listView1.View = System.Windows.Forms.View.Details;
+            this.listView1.DoubleClick += new System.EventHandler(this.listView1_DoubleClick);
+            // 
+            // chat_name
+            // 
+            this.chat_name.Text = "Chat";
+            this.chat_name.Width = 253;
+            // 
+            // chat_id
+            // 
+            this.chat_id.Text = "ID";
+            this.chat_id.Width = 219;
             // 
             // UserController
             // 
@@ -190,7 +203,6 @@
             this.contatcsPage.ResumeLayout(false);
             this.ignorePage.ResumeLayout(false);
             this.groupChatPage.ResumeLayout(false);
-            this.groupChatPage.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -199,6 +211,7 @@
 
         private void LoadStaticPictureBox()
         {
+            pictureBox1 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(pictureBox1)).BeginInit();
             pictureBox1.BackColor = System.Drawing.Color.White;
             pictureBox1.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -222,10 +235,12 @@
         private System.Windows.Forms.Label onlineStatus;
         private System.Windows.Forms.TabPage contatcsPage;
         private System.Windows.Forms.TabPage ignorePage;
-        public static System.Windows.Forms.PictureBox pictureBox1 = new System.Windows.Forms.PictureBox();
+        public static System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Panel PLACEHOLDER;
         private System.Windows.Forms.TabPage groupChatPage;
-        private System.Windows.Forms.LinkLabel linkLabel1;
         public System.Windows.Forms.ListBox listBox2;
+        private System.Windows.Forms.ColumnHeader chat_name;
+        private System.Windows.Forms.ColumnHeader chat_id;
+        private System.Windows.Forms.ListView listView1;
     }
 }

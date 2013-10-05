@@ -16,25 +16,41 @@ namespace SkypeBot.Forms.Subforms
         private Skype skype;
         private string name;
 
-        public SendMessage(string username)
+        public SendMessage(string skypeName, string DisplayName)
         {
             skype = new Skype();
             InitializeComponent();
-            this.name = username;
-            this.Text = String.Format("Send Message to {0}", name);
+            this.name = skypeName;
+            this.Text = String.Format("Send Message to {0}", DisplayName);
+            this.button1.Text = String.Format("Send Message to {0}", DisplayName);
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            try
+            if (name.StartsWith("#"))
             {
-                skype.SendMessage(name, textBox1.Text);
-                Writer.WriteSuccessln(String.Format("[{0}] Manual sendchat to \"{0}\": {2}", DateTime.Now, name, textBox1.Text));
+                try
+                {
+                    skype.Chat[name].SendMessage(textBox1.Text);
+                }
+                catch (Exception ex)
+                {
+                    Writer.WriteErrorln(ex.ToString());
+                    MessageBox.Show(String.Format("Please report it on github http://github.com/ossimc82/SkypeBot: \n\n{0}", ex.ToString()), ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
-            catch (Exception ex)
+            else
             {
-                Writer.WriteErrorln(ex.ToString());
-                MessageBox.Show(String.Format("Please report it on github http://github.com/ossimc82/SkypeBot: \n\n{0}", ex.ToString()), ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                try
+                {
+                    skype.SendMessage(name, textBox1.Text);
+                    Writer.WriteSuccessln(String.Format("[{0}] Manual sendchat to \"{0}\": {2}", DateTime.Now, name, textBox1.Text));
+                }
+                catch (Exception ex)
+                {
+                    Writer.WriteErrorln(ex.ToString());
+                    MessageBox.Show(String.Format("Please report it on github http://github.com/ossimc82/SkypeBot: \n\n{0}", ex.ToString()), ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 

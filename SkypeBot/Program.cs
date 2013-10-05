@@ -19,12 +19,11 @@ namespace SkypeBot
         public static List<string> _usernames;      //skypename
         public static string[,] UsersArray;
         public static TUserStatus curStatus;
-        public static Thread t;
+        public static List<string> _FriendlyName;
+        public static List<string> _Name;
 
         static void Main(string[] args)
         {
-            t = new Thread(() => new UserController().ShowDialog());
-            
             _users = new List<string>();
             _usernames = new List<string>();
             skype = new Skype();
@@ -62,23 +61,9 @@ namespace SkypeBot
                 }
                 Writer.WriteSuccessln("[" + DateTime.Now + "] Loaded " + _users.Count + " contacts...");
 
-                //Writer.WriteWarningln("[" + DateTime.Now + "] Loading Recent GroupChats...");
-                //List<string> Chats = new List<string>();
-                //foreach (Chat c in skype.Chats)
-                //{
-                //    if (c.ActivityTimestamp > DateTime.Now.AddDays(-2))
-                //    {
-                //        try
-                //        {
-                //            //Console.WriteLine(DateTime.Now.ToShortDateString());
-                //            Chats.Add(c.Name);
-                //            Console.WriteLine(c.FriendlyName);
-                //        }
-                //        catch (Exception) { }
-                //    }
-                //    else { }
-                //}
-                //Writer.WriteSuccessln("[" + DateTime.Now + "] Recent GroupChats Loaded...");
+                Writer.WriteWarningln("[" + DateTime.Now + "] Loading Recent GroupChats...");
+                UserListHandler.GetGroupChats();
+                Writer.WriteSuccessln("[" + DateTime.Now + "] Recent GroupChats Loaded...");
 
                 Writer.WriteWarningln("[" + DateTime.Now + "] Loading Ignorelist...");
                 UserListHandler.LoadIgnoreList();
@@ -97,20 +82,18 @@ namespace SkypeBot
                 System.Threading.Thread.Sleep(100);
                 goto Initialize;
             }
-            
+            new Thread(() => new UserController().ShowDialog()).Start();
             Writer.WriteSuccessln("[" + DateTime.Now + "] Loading complete...");
             Console.Beep();
 
             Console.CancelKeyPress += (sender, e) =>
             {
+                Writer.WriteWarningln("Closing " + System.Diagnostics.Process.GetCurrentProcess().Threads.Count + " Threads");
                 Console.ForegroundColor = ConsoleColor.DarkMagenta;
                 Console.WriteLine("Terminating...");
                 System.Threading.Thread.Sleep(100);
-                t.Abort();
                 Environment.Exit(0);
             };
-            
-            t.Start();
 
             while (true) 
             {

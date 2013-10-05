@@ -37,16 +37,17 @@
             // textBox1
             // 
             this.textBox1.BackColor = System.Drawing.Color.Red;
-            this.textBox1.Location = new System.Drawing.Point(53, 9);
+            this.textBox1.Location = new System.Drawing.Point(12, 28);
+            this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(273, 20);
+            this.textBox1.Size = new System.Drawing.Size(469, 95);
             this.textBox1.TabIndex = 0;
             this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 12);
+            this.label1.Location = new System.Drawing.Point(12, 9);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(31, 13);
             this.label1.TabIndex = 1;
@@ -55,11 +56,11 @@
             // button1
             // 
             this.button1.Enabled = false;
-            this.button1.Location = new System.Drawing.Point(15, 35);
+            this.button1.Location = new System.Drawing.Point(12, 129);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(311, 23);
+            this.button1.Size = new System.Drawing.Size(469, 49);
             this.button1.TabIndex = 2;
-            this.button1.Text = "Send";
+            this.button1.Text = "Send message to {0}";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -67,7 +68,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(338, 66);
+            this.ClientSize = new System.Drawing.Size(493, 190);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBox1);
