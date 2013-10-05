@@ -176,8 +176,6 @@
             this.ClientSize = new System.Drawing.Size(484, 412);
             this.Controls.Add(this.tabControl1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
             this.Name = "UserController";
             this.Text = "Skype";
             this.tabControl1.ResumeLayout(false);

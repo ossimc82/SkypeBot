@@ -81,42 +81,21 @@ namespace SkypeBot.Handlers
 
         }
 
-        public static void UpdateOnlineStatus(User pUser, User currentUser, TOnlineStatus Status, PictureBox pb)
+        public static void UpdateOnlineStatus(User pUser, User currentUser, TOnlineStatus Status, PictureBox pictureBox)
         {
             if (currentUser.Handle.Equals(pUser.Handle))
             {
-                if (pb.InvokeRequired)
-                {
-                    pb.Invoke(new MethodInvoker(
-                    delegate()
-                    {
-                        if (Status == TOnlineStatus.olsOnline)
-                            pb.Image = global::SkypeBot.Properties.Resources.skype_Online;
-                        else if (Status == TOnlineStatus.olsAway)
-                            pb.Image = global::SkypeBot.Properties.Resources.skype_Away;
-                        else if (Status == TOnlineStatus.olsDoNotDisturb)
-                            pb.Image = global::SkypeBot.Properties.Resources.skype_DND;
-                        else if (Status == TOnlineStatus.olsUnknown)
-                            pb.Image = global::SkypeBot.Properties.Resources.skype_Invisible;
-                        else if (Status == TOnlineStatus.olsOffline)
-                            pb.Image = global::SkypeBot.Properties.Resources.skype_Offline;
-                        else { Writer.WriteWarningln("Unknown onlinestatus: " + Status.ToString()); pb.Image = global::SkypeBot.Properties.Resources.skype_Black; }
-                    }));
-                }
-                else
-                {
-                    if (Status == TOnlineStatus.olsOnline)
-                        pb.Image = global::SkypeBot.Properties.Resources.skype_Online;
-                    else if (Status == TOnlineStatus.olsAway)
-                        pb.Image = global::SkypeBot.Properties.Resources.skype_Away;
-                    else if (Status == TOnlineStatus.olsDoNotDisturb)
-                        pb.Image = global::SkypeBot.Properties.Resources.skype_DND;
-                    else if (Status == TOnlineStatus.olsUnknown)
-                        pb.Image = global::SkypeBot.Properties.Resources.skype_Invisible;
-                    else if (Status == TOnlineStatus.olsOffline)
-                        pb.Image = global::SkypeBot.Properties.Resources.skype_Offline;
-                    else { Writer.WriteWarningln("Unknown onlinestatus: " + Status.ToString()); pb.Image = global::SkypeBot.Properties.Resources.skype_Black; }
-                }
+                if (Status == TOnlineStatus.olsOnline)
+                    pictureBox.Image = global::SkypeBot.Properties.Resources.skype_Online;
+                else if (Status == TOnlineStatus.olsAway)
+                    pictureBox.Image = global::SkypeBot.Properties.Resources.skype_Away;
+                else if (Status == TOnlineStatus.olsDoNotDisturb)
+                    pictureBox.Image = global::SkypeBot.Properties.Resources.skype_DND;
+                else if (Status == TOnlineStatus.olsUnknown)
+                    pictureBox.Image = global::SkypeBot.Properties.Resources.skype_Invisible;
+                else if (Status == TOnlineStatus.olsOffline)
+                    pictureBox.Image = global::SkypeBot.Properties.Resources.skype_Offline;
+                else { Writer.WriteWarningln("Unknown onlinestatus: " + Status.ToString()); pictureBox.Image = global::SkypeBot.Properties.Resources.skype_Black; }
             }
         }
     }

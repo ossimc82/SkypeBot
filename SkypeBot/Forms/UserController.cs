@@ -26,7 +26,6 @@ namespace SkypeBot.Forms
             this.skypeName.Text = String.Format("Currently logged in as: {0}", skype.CurrentUser.FullName);
             listBox1.DataSource = Program._users;
             listBox2.DataSource = UserListHandler.Chats;
-
             UserListHandler.UpdateOnlineStatus(skype.CurrentUser, skype.CurrentUser, skype.CurrentUser.OnlineStatus, pictureBox1);
         }
 
