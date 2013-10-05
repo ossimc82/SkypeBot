@@ -17,7 +17,7 @@ namespace SkypeBot
         private static Skype skype;
         public static List<string> _users;          //Showed name in the skype
         public static List<string> _usernames;      //skypename
-        public static string[,] Test;
+        public static string[,] UsersArray;
         public static TUserStatus curStatus;
         public static Thread t;
 
@@ -52,12 +52,12 @@ namespace SkypeBot
                 Writer.WriteWarningln("[" + DateTime.Now + "] Loading Contacts...");
                 UserListHandler.GetContacts();
 
-                Test = new string[_users.Count,2];
+                UsersArray = new string[_users.Count,2];
 
-                for (int i = 0; i < Test.Length/2; i++)
+                for (int i = 0; i < UsersArray.Length/2; i++)
                 {
-                    Test[i, 0] = _users[i];         //ShowedName
-                    Test[i, 1] = _usernames[i];     //skypename
+                    UsersArray[i, 0] = _users[i];         //ShowedName
+                    UsersArray[i, 1] = _usernames[i];     //skypename
                 }
                   
 

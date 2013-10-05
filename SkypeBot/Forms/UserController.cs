@@ -77,10 +77,10 @@ namespace SkypeBot.Forms
         }
         string FindSkypeName(string FullName)
         {
-            for (int i = 0; i < Program.Test.Length / 2; i++)
+            for (int i = 0; i < Program.UsersArray.Length / 2; i++)
             {
-                if (Program.Test[i,0] ==FullName)
-                    return Program.Test[i,1];
+                if (Program.UsersArray[i,0] ==FullName)
+                    return Program.UsersArray[i,1];
             }
             return "not found";
         }            
