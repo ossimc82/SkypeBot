@@ -76,7 +76,7 @@ namespace SkypeBot.Forms
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
-            new Thread(() => new ChangeOnlineStatus().ShowDialog()).Start();
+            new Thread(() => new ChangeOnlineStatus(skype.CurrentUser.OnlineStatus).ShowDialog()).Start();
         }
 
         private void pictureBox1_MouseLeave(object sender, EventArgs e)

@@ -16,11 +16,11 @@ namespace SkypeBot.Forms.Subforms
     {
         private Skype skype;
 
-        public ChangeOnlineStatus()
+        public ChangeOnlineStatus(TOnlineStatus CurrentOnlineStatus)
         {
             skype = new Skype();
             InitializeComponent();
-            status.Text = String.Format("OnlineStatus: {0}", skype.CurrentUser.OnlineStatus).Replace("ols", String.Empty);
+            status.Text = String.Format("OnlineStatus: {0}", CurrentOnlineStatus).Replace("ols", String.Empty);
         }
 
         private void online_Click(object sender, EventArgs e)
