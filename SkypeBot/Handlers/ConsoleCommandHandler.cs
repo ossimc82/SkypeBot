@@ -37,7 +37,9 @@ namespace SkypeBot.Handlers
                 #region SHOW_FORM
                 else if (command.Equals(StringEnum.GetStringValue(ConsoleCommand.SHOW_FORM), StringComparison.InvariantCultureIgnoreCase))
                 {
-                    new Thread(() => new Forms.UserController().ShowDialog()).Start();
+                    Thread t = new Thread(() => new Forms.UserController().ShowDialog());
+                    t.IsBackground = true;
+                    t.Start();
                 }
                 #endregion
 

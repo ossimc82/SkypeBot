@@ -26,15 +26,15 @@ namespace SkypeBot.Forms
             InitializeComponent();
             LoadStaticPictureBox();
             this.skypeName.Text = String.Format("Currently logged in as: {0}", skype.CurrentUser.FullName);
-            listBox1.DataSource = Program._users;
-            listBox2.DataSource = UserListHandler.Chats;
-            listView1.Sorting = SortOrder.Descending;
+            this.listBox1.DataSource = Program._users;
+            this.listBox2.DataSource = UserListHandler.Chats;
+            this.listView1.Sorting = SortOrder.Descending;
 
             for (int i = 0; i < Program._FriendlyName.Count; i++)
             {
                 ListViewItem _chats = new ListViewItem(Program._FriendlyName[i]);
                 _chats.SubItems.Add(Program._Name[i]);
-                listView1.Items.Add(_chats);
+                this.listView1.Items.Add(_chats);
             }
             
             UserListHandler.UpdateOnlineStatus(skype.CurrentUser, skype.CurrentUser, skype.CurrentUser.OnlineStatus, pictureBox1);
@@ -42,10 +42,15 @@ namespace SkypeBot.Forms
 
         private void listBox1_DoubleClick(object sender, EventArgs e)
         {
+            Thread t;
             string SkypeName = FindSkypeName(this.listBox1.SelectedItem.ToString());
-
+            
             if (SkypeName != "not found")
-                new Thread(() => new SendMessage(SkypeName, listBox1.SelectedItem.ToString()).ShowDialog()).Start();
+            {
+                t = new Thread(() => new SendMessage(SkypeName, listBox1.SelectedItem.ToString()).ShowDialog());
+                t.IsBackground = true;
+                t.Start();
+            }
             else
                 MessageBox.Show(String.Format("Couldnt find the skypename of {0}", listBox1.SelectedItem.ToString()), "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
         }
@@ -57,12 +62,15 @@ namespace SkypeBot.Forms
 
         private void listBox1_KeyDown(object sender, KeyEventArgs e)
         {
+            Thread t;
             if (e.KeyData == Keys.Enter)
             {
                 string SkypeName = FindSkypeName(this.listBox1.SelectedItem.ToString());
                 if (SkypeName != "not found")
                 {
-                    new Thread(() => new SendMessage(SkypeName, listBox1.SelectedItem.ToString()).ShowDialog()).Start();
+                    t = new Thread(() => new SendMessage(SkypeName, listBox1.SelectedItem.ToString()).ShowDialog());
+                    t.IsBackground = true;
+                    t.Start();
                 }
                 else
                 {
@@ -84,7 +92,9 @@ namespace SkypeBot.Forms
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
-            new Thread(() => new ChangeOnlineStatus(skype.CurrentUser.OnlineStatus).ShowDialog()).Start();
+            Thread t = new Thread(() => new ChangeOnlineStatus(skype.CurrentUser.OnlineStatus).ShowDialog());
+            t.IsBackground = true;
+            t.Start();
         }
 
         private void pictureBox1_MouseLeave(object sender, EventArgs e)
@@ -106,7 +116,9 @@ namespace SkypeBot.Forms
         {
             foreach (ListViewItem i in listView1.SelectedItems)
             {
-                new Thread(() => new SendMessage(i.SubItems[1].Text, i.SubItems[0].Text).ShowDialog()).Start();
+                Thread t = new Thread(() => new SendMessage(i.SubItems[1].Text, i.SubItems[0].Text).ShowDialog());
+                t.IsBackground = true;
+                t.Start();
             }
         }
     }
