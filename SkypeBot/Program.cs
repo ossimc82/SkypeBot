@@ -82,9 +82,7 @@ namespace SkypeBot
                 System.Threading.Thread.Sleep(100);
                 goto Initialize;
             }
-            Thread t = new Thread(() => new UserController().ShowDialog());
-            t.IsBackground = true;
-            t.Start();
+            new Thread(() => new UserController().ShowDialog()).Start();
             Writer.WriteSuccessln("[" + DateTime.Now + "] Loading complete...");
             Console.Beep();
 
